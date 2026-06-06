@@ -169,6 +169,8 @@
     </style>
 </head>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <body>
 
     <!-- SIDEBAR -->
@@ -199,6 +201,12 @@
             @else
                 <a href="/admin/pengumuman">📢 Pengumuman</a>
             @endif
+
+            @if(request()->is('admin/report*'))
+                <a class="active">📊 Report</a>
+            @else
+                <a href="{{ route('admin.report') }}">📊 Report</a>
+            @endif
         </div>
 
         <div class="bottom">
@@ -216,7 +224,10 @@
         <!-- HEADER -->
         <div class="header-strip">
             <div class="badge-admin">SIMAK FIK 2026</div>
-            <div style="font-size: 13px; color: #94a3b8;">{{ date('l, d F Y') }}</div>
+            <!-- Mengubah sintaks date PHP menjadi format Carbon Indonesia -->
+            <div style="font-size: 13px; color: #94a3b8;">
+                {{ \Carbon\Carbon::now()->locale('id')->isoFormat('dddd, DD MMMM YYYY') }}
+            </div>
         </div>
 
         <!-- CONTENT -->

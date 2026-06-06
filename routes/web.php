@@ -73,6 +73,8 @@ Route::middleware('auth')->prefix('dosen')->group(function () {
 
 // ✅ AREA ADMIN
 Route::middleware('auth')->prefix('admin')->group(function () {
+    Route::get('/report', [AdminController::class, 'report'])
+    ->name('admin.report');
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('/matkul', [MatkulController::class, 'index'])->name('matkul.index');
     Route::get('/matkul/create', [MatkulController::class, 'create'])->name('matkul.create');
@@ -81,6 +83,16 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     Route::put('/matkul/{id}', [MatkulController::class, 'update'])->name('matkul.update');
     Route::delete('/matkul/{id}', [MatkulController::class, 'destroy'])->name('matkul.destroy');
     Route::resource('pengumuman', PengumumanController::class);
+    Route::get('/report/mahasiswa',
+    [AdminController::class,'reportMahasiswa'])
+    ->name('admin.report.mahasiswa');
+
+Route::get('/report/feedback',
+    [AdminController::class,'reportFeedback'])
+    ->name('admin.report.feedback');
+    Route::get('/report/krs',
+    [AdminController::class,'reportKrs'])
+    ->name('admin.report.krs');
 });
 
 // ✅ LOGOUT

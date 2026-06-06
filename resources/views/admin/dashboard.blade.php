@@ -4,7 +4,7 @@
 
 <style>
 .container {
-    max-width: 1100px;
+    width: 100%; /* Mengubah max-width menjadi width 100% agar full ke kanan saat zoom 80% */
 }
 
 .welcome-box {
@@ -24,15 +24,15 @@
 
 .dashboard-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px,1fr));
     gap: 20px;
 }
 
 .card {
     background: #020617;
-    padding: 20px;
+    padding: 24px;
     border-radius: 12px;
-    transition: 0.3s;
+    transition: .3s;
 }
 
 .card:hover {
@@ -40,20 +40,23 @@
 }
 
 .card-title {
-    font-weight: bold;
+    font-weight: 700;
     margin-bottom: 10px;
+    font-size: 16px;
 }
 
 .card-desc {
     color: #94a3b8;
     font-size: 13px;
+    line-height: 1.6;
 }
 
 .card-link {
     display: inline-block;
-    margin-top: 10px;
+    margin-top: 15px;
     color: #6366f1;
     text-decoration: none;
+    font-weight: 600;
 }
 </style>
 
@@ -61,25 +64,10 @@
 
     <div class="welcome-box">
         <h1>🎉 Selamat Datang Admin!</h1>
+
         <p>
             Login sebagai <b>{{ Auth::user()->nik }}</b>
         </p>
-    </div>
-
-    <div class="dashboard-grid">
-
-        <div class="card">
-            <div class="card-title">📚 Mata Kuliah</div>
-            <div class="card-desc">Kelola data mata kuliah</div>
-            <a href="/admin/matkul" class="card-link">Buka →</a>
-        </div>
-
-        <div class="card">
-            <div class="card-title">📢 Pengumuman</div>
-            <div class="card-desc">Kelola pengumuman</div>
-            <a href="/admin/pengumuman" class="card-link">Buka →</a>
-        </div>
-
     </div>
 
 </div>
