@@ -97,9 +97,6 @@
     }
 </style>
 
-
-
-<!-- Card SKS -->
 <div class="sks-card">
     <div class="sks-info-text">
         <h4>📚 SKS Anda: <span id="displaySks">{{ $total_sks_sekarang }}</span>/24 SKS</h4>
@@ -131,6 +128,8 @@
                 <th>SKS</th>
                 <th>KELAS</th>
                 <th>KAPASITAS</th>
+                <th>HARI</th>
+                <th>JAM</th>
                 <th style="text-align:center;">PILIH</th>
             </tr>
         </thead>
@@ -151,6 +150,8 @@
                         {{ $m->jumlah_terisi }}/{{ $m->kapasitas }}
                     </span>
                 </td>
+                <td>{{ $m->hari }}</td>
+                <td>{{ $m->jam_mulai }} - {{ $m->jam_selesai }}</td>
                 <td class="checkbox-cell">
                     <input type="checkbox"
                            name="kode_matkul[]"
