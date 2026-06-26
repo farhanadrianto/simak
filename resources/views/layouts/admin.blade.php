@@ -202,6 +202,13 @@
                 <a href="/admin/pengumuman">📢 Pengumuman</a>
             @endif
 
+            {{-- Paket Semester --}}
+            @if(request()->is('admin/paket-semester*'))
+                <a class="active">📦 Paket Semester 2</a>
+            @else
+                <a href="{{ route('admin.paket') }}">📦 Paket Semester 2</a>
+            @endif
+
             @if(request()->is('admin/report*'))
                 <a class="active">📊 Report</a>
             @else

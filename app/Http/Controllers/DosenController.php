@@ -85,7 +85,6 @@ public function dashboard()
         $profile->update([
             'nama_lengkap' => $request->nama_lengkap,
             'nomor_wa'     => $request->nomor_wa,
-            'email_kampus' => $request->email_kampus,
             'alamat'       => $request->alamat,
             'foto_profil'  => $namaFile
         ]);
@@ -98,16 +97,84 @@ public function feedback()
 {
     $user = auth()->user();
 
-    $prodi = \App\Models\Prodi::where('kode_prodi', $user->kode_prodi)->first();
+    $prodi = Prodi::where(
+        'kode_prodi',
+        $user->kode_prodi
+    )->first();
+
+    return view('dosen.feedback', compact('prodi'));
+}
+
+public function feedbackSaya()
+{
+    $user = Auth::user();
 
     $feedback = DB::table('feedback')
-        ->select('npm', DB::raw('AVG(rating) as avg_rating'))
-        ->where('kode_prodi', $user->kode_prodi)
-        ->groupBy('npm')
-        ->orderByDesc(DB::raw('MAX(tanggal)'))
+        ->where('kategori', 'dosen')
+        ->where('nip', $user->nip)
+        ->orderByDesc('tanggal')
         ->get();
 
-    return view('dosen.feedback', compact('feedback','prodi'));
+    return view('dosen.feedback_list', [
+        'title' => 'Feedback Untuk Anda',
+        'feedback' => $feedback
+    ]);
+}
+
+public function feedbackProdi()
+{
+    $user = Auth::user();
+
+    $feedback = DB::table('feedback')
+        ->where('kode_prodi', $user->kode_prodi)
+        ->orderByDesc('tanggal')
+        ->get();
+
+    return view('dosen.feedback_list', [
+        'title' => 'Semua Feedback Prodi',
+        'feedback' => $feedback
+    ]);
+}
+
+public function feedbackPengajaran()
+{
+    $user = Auth::user();
+
+    $feedback = DB::table('feedback')
+        ->where('kategori', 'pengajaran')
+        ->where('nip', $user->nip)
+        ->orderByDesc('tanggal')
+        ->get();
+
+    return view('dosen.feedback_list', [
+        'title' => 'Feedback Pengajaran',
+        'feedback' => $feedback
+    ]);
+}
+
+public function feedbackFasilitas()
+{
+    $feedback = DB::table('feedback')
+        ->where('kategori', 'fasilitas')
+        ->orderByDesc('tanggal')
+        ->get();
+
+    return view('dosen.feedback_list', [
+        'title' => 'Feedback Fasilitas',
+        'feedback' => $feedback
+    ]);
+}
+
+public function feedbackSemua()
+{
+    $feedback = DB::table('feedback')
+        ->orderByDesc('tanggal')
+        ->get();
+
+    return view('dosen.feedback_list', [
+        'title' => 'Semua Feedback',
+        'feedback' => $feedback
+    ]);
 }
 
     // ================= DETAIL FEEDBACK =================

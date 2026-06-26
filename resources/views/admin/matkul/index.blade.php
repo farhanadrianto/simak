@@ -191,7 +191,9 @@
                         <form action="{{ route('matkul.destroy',$m->id) }}" method="POST">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn-hapus" onclick="return confirm('Yakin hapus matkul ini?')">Hapus</button>
+<button type="submit" class="btn-hapus btn-delete-matkul">
+    Hapus
+</button>
                         </form>
                     </div>
                 </td>
@@ -201,23 +203,115 @@
     </table>
 </div>
 
+<div id="modalDelete" style="
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,.65);
+justify-content:center;
+align-items:center;
+z-index:9999;
+">
+
+<div style="
+width:400px;
+background:#111827;
+border:1px solid #334155;
+border-radius:18px;
+padding:28px;
+text-align:center;
+">
+
+<h3 style="color:#f87171;margin-bottom:12px;">
+🗑️ Hapus Mata Kuliah
+</h3>
+
+<p style="color:#94a3b8;margin-bottom:25px;">
+Yakin ingin menghapus mata kuliah ini?
+</p>
+
+<div style="display:flex;justify-content:center;gap:12px;">
+
+<button id="btnBatal"
+style="
+padding:10px 20px;
+background:#334155;
+color:white;
+border:none;
+border-radius:10px;
+cursor:pointer;">
+Batal
+</button>
+
+<button id="btnYa"
+style="
+padding:10px 20px;
+background:#ef4444;
+color:white;
+border:none;
+border-radius:10px;
+cursor:pointer;">
+Hapus
+</button>
+
+</div>
+
+</div>
+
+</div>
+
 <script>
-    // Real-time Search Logic
-    document.getElementById('searchInput').addEventListener('keyup', function() {
-        let filter = this.value.toLowerCase();
-        let rows = document.querySelector("#matkulTable tbody").rows;
+let formDelete = null;
 
-        for (let i = 0; i < rows.length; i++) {
-            let kodeText = rows[i].cells[1].textContent.toLowerCase();
-            let namaText = rows[i].cells[2].textContent.toLowerCase();
+// Search
+document.getElementById('searchInput').addEventListener('keyup', function () {
 
-            if (kodeText.includes(filter) || namaText.includes(filter)) {
-                rows[i].style.display = "";
-            } else {
-                rows[i].style.display = "none";
-            }
-        }
+    let filter = this.value.toLowerCase();
+    let rows = document.querySelector("#matkulTable tbody").rows;
+
+    for (let i = 0; i < rows.length; i++) {
+
+        let kode = rows[i].cells[1].textContent.toLowerCase();
+        let nama = rows[i].cells[2].textContent.toLowerCase();
+
+        rows[i].style.display =
+            (kode.includes(filter) || nama.includes(filter))
+            ? ""
+            : "none";
+
+    }
+
+});
+
+// Modal Delete
+document.querySelectorAll(".btn-delete-matkul").forEach(btn => {
+
+    btn.closest("form").addEventListener("submit", function(e){
+
+        e.preventDefault();
+
+        formDelete = this;
+
+        document.getElementById("modalDelete").style.display="flex";
+
     });
+
+});
+
+document.getElementById("btnBatal").onclick=function(){
+
+    document.getElementById("modalDelete").style.display="none";
+
+};
+
+document.getElementById("btnYa").onclick=function(){
+
+    formDelete.submit();
+
+};
 </script>
 
 @endsection

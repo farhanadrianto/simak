@@ -198,12 +198,16 @@
                            placeholder="Contoh: 081234567890">
                 </div>
 
-                <div class="form-group">
-                    <label>Email Kampus</label>
-                    <input type="email" name="email_kampus" 
-                           value="{{ old('email_kampus', $profile->email_kampus) }}" 
-                           placeholder="Contoh: nip@lecturer.kampus.ac.id">
-                </div>
+<div class="form-group">
+    <label>Email Kampus</label>
+    <input
+        type="email"
+        value="{{ $profile->email_kampus }}"
+        class="readonly"
+        readonly>
+
+    <div class="lock">🔒 Tidak dapat diubah</div>
+</div>
             </div>
 
             <!-- BARIS 3: ALAMAT (LEBAR PENUH) -->

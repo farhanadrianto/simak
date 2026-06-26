@@ -36,7 +36,6 @@ public function index()
         $request->validate([
             'nama_lengkap' => 'nullable|string|max:255',
             'nomor_wa'     => 'nullable|string|max:15',
-            'email_kampus' => 'nullable|email|max:255',
             'alamat'       => 'nullable|string',
             'foto'         => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048'
         ]);
@@ -50,7 +49,6 @@ public function index()
         // 🔥 UPDATE BIODATA
         $profile->nama_lengkap = $request->nama_lengkap;
         $profile->nomor_wa     = $request->nomor_wa;
-        $profile->email_kampus = $request->email_kampus;
         $profile->alamat       = $request->alamat;
 
         // 🔥 HANDLE FOTO (kalau upload baru)

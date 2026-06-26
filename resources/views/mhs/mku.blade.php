@@ -49,6 +49,13 @@
     }
     .btn-simpan:hover { background: #10b981; transform: translateY(-2px); }
 
+.btn-simpan:disabled{
+    background:#475569;
+    color:#94a3b8;
+    cursor:not-allowed;
+    transform:none;
+}
+
     /* --- CSS BARU SESUAI GAMBAR (GLASSMORPHISM) --- */
     .sks-card {
         background: rgba(30, 41, 59, 0.5); /* Semi transparan */
@@ -108,16 +115,28 @@
     }
 </style>
 
-
+@php
+    $maxSks = auth()->user()->semester <= 2 ? 20 : 24;
+@endphp
 
 <!-- Card SKS sesuai Gambar -->
 <div class="sks-card">
     <div class="sks-info-text">
-        <h4>📚 SKS Anda: <span id="displaySks">{{ $total_sks_sekarang }}</span>/24 SKS</h4>
-        <p>Sisa kuota: <span id="displayQuota">{{ 24 - $total_sks_sekarang }}</span> SKS</p>
+<h4>
+    📚 SKS Anda:
+    <span id="displaySks">{{ $total_sks_sekarang }}</span>/{{ $maxSks }} SKS
+</h4>
+
+<p>
+    Sisa kuota:
+    <span id="displayQuota">{{ $maxSks - $total_sks_sekarang }}</span> SKS
+</p>
     </div>
     <div class="progress-container">
-        <div id="progressBar" class="progress-bar" style="width: {{ ($total_sks_sekarang / 24) * 100 }}%;"></div>
+        <div id="progressBar"
+     class="progress-bar"
+     style="width: {{ ($total_sks_sekarang / $maxSks) * 100 }}%;">
+</div>
     </div>
 </div>
 
@@ -155,7 +174,11 @@
                 $sudahAmbil = is_array($sudah) && in_array($row->kode_matkul, $sudah);
                 $penuh = $row->jumlah_terisi >= $row->kapasitas;
             @endphp
-            <tr style="{{ $sudahAmbil ? 'opacity: 0.6; background: rgba(255,255,255,0.02);' : '' }}">
+<tr
+@if($sudahAmbil)
+style="opacity:.45;filter:grayscale(.3);background:rgba(255,255,255,.02);"
+@endif
+>
                 <td>{{ $i+1 }}</td>
                 <td>{{ $row->kode_matkul }}</td>
                 <td>{{ $row->nama_matkul }}</td>
@@ -169,11 +192,12 @@
                 <td>{{ $row->hari }}</td>
                 <td>{{ $row->jam_mulai }} - {{ $row->jam_selesai }}</td>
                 <td class="checkbox-cell">
-                    <input type="checkbox"
-                           name="kode_matkul[]"
-                           class="matkul-cb"
-                           value="{{ $row->kode_matkul }}"
-                           data-sks="{{ $row->sks }}"
+                        <input type="checkbox"
+                            name="kode_matkul[]"
+                            class="matkul-cb"
+                            value="{{ $row->kode_matkul }}"
+                            data-sks="{{ $row->sks }}"
+                            data-nama="{{ $row->nama_matkul }}"
                            {{ $sudahAmbil || $penuh ? 'disabled' : '' }}
                            {{ $sudahAmbil ? 'checked' : '' }}>
                 </td>
@@ -183,78 +207,144 @@
     </table>
 
     <div style="text-align: right;">
-        <button type="submit" class="btn-simpan" id="btnSimpan">
+        <button
+            type="submit"
+            class="btn-simpan"
+            id="btnSimpan"
+            disabled>
             ✓ Simpan Pilihan
         </button>
     </div>
 </form>
 
 <script>
-    const checkboxes = document.querySelectorAll('.matkul-cb');
-    const displaySks = document.getElementById('displaySks');
-    const displayQuota = document.getElementById('displayQuota');
-    const progressBar = document.getElementById('progressBar');
-    
-    const MAX_SKS = 24;
-    // Mengambil total SKS yang sudah tersimpan di database saat ini
-    const INITIAL_SKS = {{ $total_sks_sekarang }};
+const checkboxes = document.querySelectorAll('.matkul-cb');
+const displaySks = document.getElementById('displaySks');
+const displayQuota = document.getElementById('displayQuota');
+const progressBar = document.getElementById('progressBar');
+const btnSimpan = document.getElementById('btnSimpan');
 
-    function updateLogic() {
-        let addedSks = 0;
-        
-        // 1. Hitung SKS dari checkbox yang baru dicentang user (bukan yang sudah ada di DB/disabled)
-        const newlyChecked = document.querySelectorAll('.matkul-cb:checked:not([disabled-server])');
-        
-        newlyChecked.forEach(cb => {
-            addedSks += parseInt(cb.dataset.sks);
-        });
+const MAX_SKS = {{ $maxSks }};
+const INITIAL_SKS = {{ $total_sks_sekarang }};
 
-        const total = INITIAL_SKS + addedSks;
-        const sisa = MAX_SKS - total;
+function updateLogic() {
 
-        // 2. Update Tampilan Widget SKS
-        displaySks.innerText = total;
-        displayQuota.innerText = sisa;
-        progressBar.style.width = (total / MAX_SKS * 100) + '%';
+    let addedSks = 0;
 
-        // 3. Logika Kunci Checkbox (Hanya Checkbox-nya saja)
-        checkboxes.forEach(cb => {
-            // Kita hanya memproses checkbox yang bukan bawaan dari server (bukan yang sudah diambil/penuh)
-            if (!cb.hasAttribute('disabled-server')) {
-                const matkulSks = parseInt(cb.dataset.sks);
+    const newlyChecked = document.querySelectorAll(
+        '.matkul-cb:checked:not([disabled-server])'
+    );
 
-                if (!cb.checked) {
-                    if (matkulSks > sisa) {
-                        // Jika SKS mata kuliah ini melebihi sisa kuota:
-                        cb.disabled = true;
-                        cb.style.opacity = "0.3"; // Checkbox jadi transparan
-                        cb.style.filter = "grayscale(1)"; // Checkbox jadi abu-abu
-                        cb.style.cursor = "not-allowed";
-                    } else {
-                        // Jika masih cukup:
-                        cb.disabled = false;
-                        cb.style.opacity = "1";
-                        cb.style.filter = "none";
-                        cb.style.cursor = "pointer";
-                    }
-                }
-            }
-        });
-    }
+    btnSimpan.disabled = (newlyChecked.length === 0);
 
-    // Inisialisasi: Tandai mana yang disabled dari server (Sudah diambil atau Kapasitas Penuh)
-    checkboxes.forEach(cb => {
-        if (cb.disabled) {
-            // Kita tandai agar logic update tidak "menghidupkan" kembali checkbox ini
-            cb.setAttribute('disabled-server', 'true');
-        }
-        
-        // Pasang event listener klik
-        cb.addEventListener('change', updateLogic);
+    newlyChecked.forEach(cb => {
+        addedSks += parseInt(cb.dataset.sks);
     });
 
-    // Jalankan sekali saat halaman pertama kali dibuka
-    updateLogic();
+    const total = INITIAL_SKS + addedSks;
+    const sisa = MAX_SKS - total;
+
+    // Update widget
+    displaySks.innerText = total;
+    displayQuota.innerText = sisa;
+    progressBar.style.width = (total / MAX_SKS * 100) + "%";
+
+    // ==========================
+    // RESET
+    // ==========================
+
+    checkboxes.forEach(cb => {
+
+        if (!cb.hasAttribute("disabled-server")) {
+
+            cb.disabled = false;
+
+            const row = cb.closest("tr");
+            row.style.opacity = "1";
+            row.style.filter = "none";
+
+            cb.style.cursor = "pointer";
+        }
+
+    });
+
+    // ==========================
+    // BATAS SKS
+    // ==========================
+
+    checkboxes.forEach(cb => {
+
+        if (!cb.hasAttribute("disabled-server") && !cb.checked) {
+
+            const matkulSks = parseInt(cb.dataset.sks);
+
+            if (matkulSks > sisa) {
+
+                cb.disabled = true;
+
+                const row = cb.closest("tr");
+                row.style.opacity = "0.45";
+                row.style.filter = "grayscale(.3)";
+
+                cb.style.cursor = "not-allowed";
+            }
+
+        }
+
+    });
+
+    // ==========================
+    // HANYA SATU KELAS
+    // ==========================
+
+    const namaDipilih = [];
+
+    checkboxes.forEach(cb => {
+
+        if (cb.checked) {
+            namaDipilih.push(cb.dataset.nama);
+        }
+
+    });
+
+    checkboxes.forEach(cb => {
+
+        if (cb.hasAttribute("disabled-server")) return;
+
+        if (
+            !cb.checked &&
+            namaDipilih.includes(cb.dataset.nama)
+        ) {
+
+            cb.disabled = true;
+
+            const row = cb.closest("tr");
+            row.style.opacity = "0.45";
+            row.style.filter = "grayscale(.3)";
+
+            cb.style.cursor = "not-allowed";
+        }
+
+    });
+
+}
+
+// ==========================
+// INISIALISASI
+// ==========================
+
+checkboxes.forEach(cb => {
+
+    if (cb.disabled) {
+        cb.setAttribute("disabled-server", "true");
+    }
+
+    cb.addEventListener("change", updateLogic);
+
+});
+
+updateLogic();
+
 </script>
 
 @endsection

@@ -11,6 +11,8 @@ class Feedback extends Model
     protected $fillable = [
         'npm',
         'kode_prodi',
+        'kategori',
+        'nip',
         'rating',
         'isi',
         'tanggal'

@@ -72,113 +72,174 @@ class MatkulController extends Controller
     // 🔥 MAHASISWA (MKR - Reguler)
     // ======================
 
-    public function mkr()
-    {
-        $user = Auth::user();
-        
-        // Mengambil total SKS untuk Progress Bar di View
-        $total_sks_sekarang = $this->getTotalSksMahasiswa($user->npm);
+public function mkr()
+{
+    $user = Auth::user();
 
-        // Ambil matkul sesuai prodi mahasiswa & hitung kapasitas real-time
-        $matkul = Matkul::where('kode_prodi', $user->kode_prodi)
-            ->withCount(['krs as jumlah_terisi' => function ($q) {
-                $q->where('status', '!=', 'ditolak');
-            }])->get();
+    $total_sks_sekarang = $this->getTotalSksMahasiswa($user->npm);
 
-        // Daftar kode matkul yang sudah ada di KRS user
-        $sudah = Krs::where('npm', $user->npm)->pluck('kode_matkul')->toArray();
+    $matkul = Matkul::where('kode_prodi', $user->kode_prodi)
+        ->where('semester', $user->semester)
+        ->withCount(['krs as jumlah_terisi' => function ($q) {
+            $q->where('status', '!=', 'ditolak');
+        }])
+        ->get();
 
-        return view('mhs.mkr', compact('matkul', 'sudah', 'total_sks_sekarang'));
-    }
+    $sudah = Krs::where('npm', $user->npm)
+        ->pluck('kode_matkul')
+        ->toArray();
 
-    public function storeMkr(Request $request)
-    {
-        $user = Auth::user();
-        $pilih = $request->kode_matkul ?? [];
-        $count = 0;
-        
-        foreach ($pilih as $kode) {
-            $current_total = $this->getTotalSksMahasiswa($user->npm);
-            $matkul = Matkul::where('kode_matkul', $kode)->first();
+    return view('mhs.mkr', compact(
+        'matkul',
+        'sudah',
+        'total_sks_sekarang'
+    ));
+}
 
-            if (!$matkul) continue;
+public function storeMkr(Request $request)
+{
+    $user = Auth::user();
 
-            // 1. Cek apakah sudah pernah ambil
-            $cek = Krs::where('npm', $user->npm)->where('kode_matkul', $kode)->exists();
-            if ($cek) continue;
+    $maxSks = $user->semester <= 2 ? 20 : 24;
 
-            // 2. Cek Kapasitas Matkul
-            $terisi = Krs::where('kode_matkul', $kode)->where('status', '!=', 'ditolak')->count();
-            
-            // 3. Cek Batas Maksimal 24 SKS
-            if ($terisi < $matkul->kapasitas && ($current_total + $matkul->sks) <= 24) {
-                Krs::create([
-                    'npm' => $user->npm,
-                    'kode_matkul' => $kode,
-                    'status' => 'menunggu'
-                ]);
-                $count++;
-            }
+    $pilih = $request->kode_matkul ?? [];
+    $count = 0;
+
+    foreach ($pilih as $kode) {
+
+        $current_total = $this->getTotalSksMahasiswa($user->npm);
+
+        $matkul = Matkul::where('kode_matkul', $kode)->first();
+
+        if (!$matkul) {
+            continue;
         }
 
-        if ($count > 0) {
-            return back()->with('success', "Berhasil menambahkan $count mata kuliah reguler.");
+        $cek = Krs::where('npm', $user->npm)
+            ->where('kode_matkul', $kode)
+            ->exists();
+
+        if ($cek) {
+            continue;
         }
-        return back()->with('error', 'Gagal menambah matkul. Cek kuota SKS atau kapasitas kelas.');
+
+        $terisi = Krs::where('kode_matkul', $kode)
+            ->where('status', '!=', 'ditolak')
+            ->count();
+
+        if (
+            $terisi < $matkul->kapasitas &&
+            ($current_total + $matkul->sks) <= $maxSks
+        ) {
+            Krs::create([
+                'npm' => $user->npm,
+                'kode_matkul' => $kode,
+                'status' => 'menunggu'
+            ]);
+
+            $count++;
+        }
     }
+
+    if ($count > 0) {
+        return back()->with(
+            'success',
+            "Berhasil menambahkan $count mata kuliah reguler."
+        );
+    }
+
+    return back()->with(
+        'error',
+        'Gagal menambah matkul. Cek kuota SKS atau kapasitas kelas.'
+    );
+}
 
     // ======================
     // 🔥 MAHASISWA (MKU - Umum)
     // ======================
 
-    public function mku()
-    {
-        $user = Auth::user();
-        
-        // Mengambil total SKS untuk Progress Bar di View
-        $total_sks_sekarang = $this->getTotalSksMahasiswa($user->npm);
+public function mku()
+{
+    $user = Auth::user();
 
-        // Ambil matkul kategori MKU & hitung kapasitas real-time
-        $matkul = Matkul::where('jenis', 'MKU')
-            ->withCount(['krs as jumlah_terisi' => function ($q) {
-                $q->where('status', '!=', 'ditolak');
-            }])->get();
+    $total_sks_sekarang = $this->getTotalSksMahasiswa($user->npm);
 
-        $sudah = Krs::where('npm', $user->npm)->pluck('kode_matkul')->toArray();
+$matkul = Matkul::where('jenis', 'MKU')
+    ->where(function ($q) use ($user) {
+        $q->whereNull('semester')
+          ->orWhere('semester', $user->semester);
+    })
+    ->withCount(['krs as jumlah_terisi' => function ($q) {
+        $q->where('status', '!=', 'ditolak');
+    }])
+    ->get();
 
-        return view('mhs.mku', compact('matkul', 'sudah', 'total_sks_sekarang'));
-    }
+    $sudah = Krs::where('npm', $user->npm)
+        ->pluck('kode_matkul')
+        ->toArray();
 
-    public function storeMku(Request $request)
-    {
-        $user = Auth::user();
-        $pilih = $request->kode_matkul ?? [];
-        $count = 0;
+    return view('mhs.mku', compact(
+        'matkul',
+        'sudah',
+        'total_sks_sekarang'
+    ));
+}
 
-        foreach ($pilih as $kode) {
-            $current_total = $this->getTotalSksMahasiswa($user->npm);
-            $matkul = Matkul::where('kode_matkul', $kode)->first();
+public function storeMku(Request $request)
+{
+    $user = Auth::user();
 
-            if (!$matkul) continue;
+    $maxSks = $user->semester <= 2 ? 20 : 24;
 
-            $cek = Krs::where('npm', $user->npm)->where('kode_matkul', $kode)->exists();
-            if ($cek) continue;
+    $pilih = $request->kode_matkul ?? [];
+    $count = 0;
 
-            $terisi = Krs::where('kode_matkul', $kode)->where('status', '!=', 'ditolak')->count();
+    foreach ($pilih as $kode) {
 
-            if ($terisi < $matkul->kapasitas && ($current_total + $matkul->sks) <= 24) {
-                Krs::create([
-                    'npm' => $user->npm,
-                    'kode_matkul' => $kode,
-                    'status' => 'menunggu'
-                ]);
-                $count++;
-            }
+        $current_total = $this->getTotalSksMahasiswa($user->npm);
+
+        $matkul = Matkul::where('kode_matkul', $kode)->first();
+
+        if (!$matkul) {
+            continue;
         }
 
-        if ($count > 0) {
-            return back()->with('success', "Berhasil menambahkan $count mata kuliah umum.");
+        $cek = Krs::where('npm', $user->npm)
+            ->where('kode_matkul', $kode)
+            ->exists();
+
+        if ($cek) {
+            continue;
         }
-        return back()->with('error', 'Gagal menambah matkul. Cek kuota SKS atau kapasitas kelas.');
+
+        $terisi = Krs::where('kode_matkul', $kode)
+            ->where('status', '!=', 'ditolak')
+            ->count();
+
+        if (
+            $terisi < $matkul->kapasitas &&
+            ($current_total + $matkul->sks) <= $maxSks
+        ) {
+            Krs::create([
+                'npm' => $user->npm,
+                'kode_matkul' => $kode,
+                'status' => 'menunggu'
+            ]);
+
+            $count++;
+        }
     }
+
+    if ($count > 0) {
+        return back()->with(
+            'success',
+            "Berhasil menambahkan $count mata kuliah umum."
+        );
+    }
+
+    return back()->with(
+        'error',
+        'Gagal menambah matkul. Cek kuota SKS atau kapasitas kelas.'
+    );
+}
 }

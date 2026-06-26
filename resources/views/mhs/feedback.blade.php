@@ -128,6 +128,36 @@
     .btn-delete:hover {
         background: rgba(239, 68, 68, 0.2);
     }
+
+    select{
+    width:100%;
+    background:#020617;
+    border:1px solid #334155;
+    color:white;
+    padding:14px;
+    border-radius:12px;
+    outline:none;
+    font-size:15px;
+    transition:.3s;
+    appearance:none;
+    -webkit-appearance:none;
+    -moz-appearance:none;
+
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M1.5 5l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;
+    background-position:right 15px center;
+    padding-right:45px;
+}
+
+select:focus{
+    border-color:#34d399;
+    box-shadow:0 0 0 2px rgba(52,211,153,.15);
+}
+
+select option{
+    background:#0f172a;
+    color:white;
+}
 </style>
 
 <h2 style="color: #34d399; margin-bottom: 20px;">
@@ -144,6 +174,52 @@
             <label style="color: #94a3b8; display: block; margin-bottom: 8px;">NPM</label>
             <input type="text" class="input input-readonly" value="{{ auth()->user()->npm }}" readonly>
         </div>
+
+        <div style="margin-bottom: 15px;">
+    <label style="color: #94a3b8; display: block; margin-bottom: 8px;">
+        Kategori Feedback
+    </label>
+
+    <select name="kategori" id="kategori" class="input" required>
+
+        <option value="">
+            -- Pilih Kategori --
+        </option>
+
+        <option value="dosen">
+            Dosen
+        </option>
+
+        <option value="pengajaran">
+            Pengajaran
+        </option>
+
+        <option value="fasilitas">
+            Fasilitas
+        </option>
+
+    </select>
+</div>
+
+<div id="nipBox" style="display:none; margin-bottom:15px;">
+
+    <label style="color: #94a3b8; display:block; margin-bottom:8px;">
+        NIP Dosen
+    </label>
+
+<select id="nip" name="nip">
+
+    <option value="">-- Pilih Dosen --</option>
+
+    @foreach($dosen as $d)
+        <option value="{{ $d->nip }}">
+            {{ $d->nip }} - {{ $d->nama_lengkap }}
+        </option>
+    @endforeach
+
+</select>
+
+</div>
 
         <div style="margin-bottom: 15px;">
             <label style="color: #94a3b8; display: block; margin-bottom: 8px;">Rating Kepuasan</label>
@@ -185,7 +261,32 @@
             <div style="flex: 1;">
                 <span style="color: #facc15;">{{ str_repeat('⭐', $f->rating) }}</span>
                 <span style="color: #64748b; font-size: 0.9em; margin-left: 5px;">({{ $f->rating }}/5)</span>
-                <p style="color: white; margin-top: 10px; margin-bottom: 8px; line-height: 1.5;">{{ $f->isi }}</p>
+                <div style="margin-top:10px;">
+
+    <div style="margin-bottom:8px;">
+        <span style="
+            background:#1e293b;
+            color:#34d399;
+            padding:4px 10px;
+            border-radius:8px;
+            font-size:12px;
+            font-weight:600;
+        ">
+            {{ ucfirst($f->kategori) }}
+        </span>
+    </div>
+
+    @if($f->nip)
+        <div style="color:#94a3b8; margin-bottom:8px;">
+            <b>NIP Dosen:</b> {{ $f->nip }}
+        </div>
+    @endif
+
+    <p style="color:white; margin:0;">
+        {{ $f->isi }}
+    </p>
+
+</div>
                 <small style="color: #475569;">{{ \Carbon\Carbon::parse($f->tanggal)->format('d M Y, H:i') }}</small>
             </div>
 
@@ -195,29 +296,140 @@
                     ✏️ Edit
                 </a>
 
-                <a href="{{ route('mhs.feedback.delete', $f->id) }}" 
-                   onclick="return confirm('Yakin ingin menghapus feedback ini?')"
-                   class="btn-delete">
-                    🗑️ Hapus
-                </a>
+<a href="{{ route('mhs.feedback.delete', $f->id) }}"
+   class="btn-delete btn-delete-feedback">
+    🗑️ Hapus
+</a>
             </div>
 
         </div>
     </div>
 @endforeach
 
+<div id="modalDelete" style="
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,.6);
+justify-content:center;
+align-items:center;
+z-index:9999;
+">
+
+<div style="
+background:#0f172a;
+padding:25px;
+border-radius:16px;
+width:380px;
+border:1px solid #1e293b;
+text-align:center;
+">
+
+<h3 style="color:white;margin-bottom:15px;">
+Hapus Feedback
+</h3>
+
+<p style="color:#94a3b8;">
+Yakin ingin menghapus feedback ini?
+</p>
+
+<div style="display:flex;gap:10px;justify-content:center;margin-top:20px;">
+
+<button id="btnBatal"
+style="
+padding:10px 18px;
+background:#334155;
+border:none;
+border-radius:8px;
+color:white;
+cursor:pointer;
+">
+Batal
+</button>
+
+<button id="btnYa"
+style="
+padding:10px 18px;
+background:#ef4444;
+border:none;
+border-radius:8px;
+color:white;
+cursor:pointer;
+">
+Hapus
+</button>
+
+</div>
+
+</div>
+
+</div>
+
 <script>
-    window.onload = function() {
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const day = String(now.getDate()).padStart(2, '0');
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        
-        const currentDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
-        document.getElementById('tanggal').value = currentDateTime;
-    }
+
+window.onload = function () {
+
+    const now = new Date();
+
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+
+    document.getElementById('tanggal').value =
+        `${year}-${month}-${day}T${hours}:${minutes}`;
+
+    const kategori = document.getElementById('kategori');
+    const nipBox = document.getElementById('nipBox');
+
+    kategori.addEventListener('change', function () {
+
+        if (this.value == 'dosen' || this.value == 'pengajaran') {
+            nipBox.style.display = 'block';
+        } else {
+            nipBox.style.display = 'none';
+        }
+
+    });
+
+    // =========================
+    // MODAL HAPUS
+    // =========================
+
+    let deleteUrl = "";
+
+    document.querySelectorAll(".btn-delete-feedback").forEach(btn => {
+
+        btn.addEventListener("click", function (e) {
+
+            e.preventDefault();
+
+            deleteUrl = this.href;
+
+            document.getElementById("modalDelete").style.display = "flex";
+
+        });
+
+    });
+
+    document.getElementById("btnBatal").onclick = function () {
+
+        document.getElementById("modalDelete").style.display = "none";
+
+    };
+
+    document.getElementById("btnYa").onclick = function () {
+
+        window.location.href = deleteUrl;
+
+    };
+
+};
+
 </script>
 
 @endsection

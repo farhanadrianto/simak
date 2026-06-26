@@ -55,6 +55,9 @@ Route::middleware('auth')->prefix('mhs')->group(function () {
 
     Route::get('/krs', [KrsController::class, 'index'])->name('mhs.krs');
     Route::delete('/krs/{id}', [KrsController::class, 'destroy'])->name('mhs.krs.delete');
+
+Route::post('/ambil-paket', [KrsController::class, 'ambilPaket'])
+    ->name('mhs.krs.ambilPaket');
 });
 
 // ✅ AREA DOSEN
@@ -69,6 +72,18 @@ Route::middleware('auth')->prefix('dosen')->group(function () {
     Route::post('/krs/setujui/{id}', [DosenController::class, 'setujuiKrs'])->name('dosen.krs.setujui');
     Route::post('/krs/tolak/{id}', [DosenController::class, 'tolakKrs'])->name('dosen.krs.tolak');
     Route::post('/krs/reset/{id}', [DosenController::class, 'resetKrs'])->name('dosen.krs.reset');
+
+    Route::get('/feedback', [DosenController::class, 'feedback'])->name('dosen.feedback');
+
+Route::get('/feedback/saya', [DosenController::class, 'feedbackSaya'])->name('dosen.feedback.saya');
+
+Route::get('/feedback/prodi', [DosenController::class, 'feedbackProdi'])->name('dosen.feedback.prodi');
+
+Route::get('/feedback/pengajaran', [DosenController::class, 'feedbackPengajaran'])->name('dosen.feedback.pengajaran');
+
+Route::get('/feedback/fasilitas', [DosenController::class, 'feedbackFasilitas'])->name('dosen.feedback.fasilitas');
+
+Route::get('/feedback/semua', [DosenController::class, 'feedbackSemua'])->name('dosen.feedback.semua');
 });
 
 // ✅ AREA ADMIN
@@ -93,6 +108,11 @@ Route::get('/report/feedback',
     Route::get('/report/krs',
     [AdminController::class,'reportKrs'])
     ->name('admin.report.krs');
+
+    Route::get('/paket-semester',
+        [AdminController::class, 'paketSemester'])
+        ->name('admin.paket');
+    
 });
 
 // ✅ LOGOUT

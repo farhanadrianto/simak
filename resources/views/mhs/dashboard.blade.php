@@ -99,9 +99,7 @@
     Halo, <span style="color:#34d399;">{{ $profile->nama_lengkap ?? 'Mahasiswa' }}</span> 👋
 </h1>
 
-        <div style="margin-top:8px; color:#9ca3af;">
-            Tahun Ajaran 2024 &nbsp;&nbsp; Semester Genap
-        </div>
+
     </div>
 
     {{-- ================= INFO MAHASISWA ================= --}}

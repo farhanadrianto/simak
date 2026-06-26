@@ -92,6 +92,36 @@
 .btn-back:hover {
     background: #475569;
 }
+
+select{
+    width:100%;
+    background:#020617;
+    border:1px solid #334155;
+    color:white;
+    padding:14px;
+    border-radius:12px;
+    outline:none;
+    font-size:15px;
+    transition:.3s;
+    appearance:none;
+    -webkit-appearance:none;
+    -moz-appearance:none;
+
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M1.5 5l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;
+    background-position:right 15px center;
+    padding-right:45px;
+}
+
+select:focus{
+    border-color:#34d399;
+    box-shadow:0 0 0 2px rgba(52,211,153,.15);
+}
+
+select option{
+    background:#0f172a;
+    color:white;
+}
 </style>
 
 <div class="form-card">
@@ -106,6 +136,53 @@
             <label style="color: #94a3b8;">NPM</label>
             <input type="text" class="input input-readonly" value="{{ auth()->user()->npm }}" readonly>
         </div>
+
+        <!-- Kategori -->
+<div style="margin-bottom: 15px;">
+    <label style="color: #94a3b8;">Kategori Feedback</label>
+
+    <select name="kategori" id="kategori" class="input" required>
+
+        <option value="dosen"
+            {{ $data->kategori == 'dosen' ? 'selected' : '' }}>
+            Dosen
+        </option>
+
+        <option value="pengajaran"
+            {{ $data->kategori == 'pengajaran' ? 'selected' : '' }}>
+            Pengajaran
+        </option>
+
+        <option value="fasilitas"
+            {{ $data->kategori == 'fasilitas' ? 'selected' : '' }}>
+            Fasilitas
+        </option>
+
+    </select>
+</div>
+
+<!-- NIP -->
+<div id="nipBox" style="margin-bottom:15px;">
+
+    <label style="color: #94a3b8;">
+        NIP Dosen
+    </label>
+
+<select name="nip" id="nip">
+
+    <option value="">-- Pilih Dosen --</option>
+
+    @foreach($dosen as $d)
+        <option
+            value="{{ $d->nip }}"
+            {{ $data->nip == $d->nip ? 'selected' : '' }}>
+            {{ $d->nip }} - {{ $d->nama_lengkap }}
+        </option>
+    @endforeach
+
+</select>
+
+</div>
 
         <!-- Rating -->
         <div style="margin-bottom: 15px;">
@@ -130,8 +207,12 @@
         <!-- Tanggal -->
         <div style="margin-bottom: 20px;">
             <label style="color: #94a3b8;">Tanggal</label>
-            <input type="datetime-local" name="tanggal" class="input"
-                value="{{ \Carbon\Carbon::parse($data->tanggal)->format('Y-m-d\TH:i') }}" required>
+<input
+    type="datetime-local"
+    name="tanggal"
+    id="tanggal"
+    class="input"
+    required>
         </div>
 
 <div style="display:flex; gap:10px;">
@@ -142,5 +223,42 @@
     </a>
 </div>
 </div>
+
+<script>
+
+const kategori =
+    document.getElementById('kategori');
+
+const nipBox =
+    document.getElementById('nipBox');
+
+function toggleNip(){
+
+    if(
+        kategori.value === 'dosen' ||
+        kategori.value === 'pengajaran'
+    ){
+        nipBox.style.display = 'block';
+    }else{
+        nipBox.style.display = 'none';
+    }
+
+}
+
+toggleNip();
+
+kategori.addEventListener('change', toggleNip);
+
+const now = new Date();
+
+const year = now.getFullYear();
+const month = String(now.getMonth() + 1).padStart(2, '0');
+const day = String(now.getDate()).padStart(2, '0');
+const hours = String(now.getHours()).padStart(2, '0');
+const minutes = String(now.getMinutes()).padStart(2, '0');
+
+document.getElementById('tanggal').value =
+`${year}-${month}-${day}T${hours}:${minutes}`;
+</script>
 
 @endsection

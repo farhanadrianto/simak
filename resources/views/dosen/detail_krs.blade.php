@@ -153,24 +153,21 @@
     }
 
     /* Tombol Kembali (Hijau) */
-    .btn-back {
-        display: inline-flex;
-        align-items: center;
-        padding: 12px 24px;
-        background: #10b981; /* Background Hijau */
-        color: #ffffff;
-        text-decoration: none;
-        border-radius: 10px;
-        font-weight: 600;
-        font-size: 15px;
-        transition: 0.3s;
-        width: fit-content;
-    }
+.btn-back {
+    background: #334155; /* abu2 gelap */
+    color: #e2e8f0;
+    padding: 12px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-block;
+    transition: 0.2s;
+}
 
-    .btn-back:hover {
-        background: #059669;
-        transform: translateX(-5px);
-    }
+.btn-back:hover {
+    background: #475569;
+    transform: translateX(-5px);
+}
 </style>
 
 <div class="container">
@@ -196,6 +193,23 @@
             </thead>
             <tbody>
                 @foreach($krs as $i => $k)
+
+@php
+$bentrok = false;
+
+foreach ($krs as $j => $cek) {
+    if (
+        $i != $j &&
+        $k->hari == $cek->hari &&
+        $k->jam_mulai < $cek->jam_selesai &&
+        $k->jam_selesai > $cek->jam_mulai
+    ) {
+        $bentrok = true;
+        break;
+    }
+}
+@endphp
+                
                 <tr>
                     <td>{{ $i + 1 }}</td>
                     <td>{{ $k->kode_matkul }}</td>
@@ -203,11 +217,23 @@
                     <td>{{ $k->sks }}</td>
                     <td>{{ $k->hari }}</td>
                     <td>{{ $k->jam_mulai }} - {{ $k->jam_selesai }}</td>
-                    <td>
-                        <span class="status {{ $k->status }}">
-                            {{ ucfirst($k->status) }}
-                        </span>
-                    </td>
+<td>
+
+@if($bentrok)
+
+    <span class="status ditolak">
+        ⚠️ Bentrok Jadwal
+    </span>
+
+@else
+
+    <span class="status {{ $k->status }}">
+        {{ ucfirst($k->status) }}
+    </span>
+
+@endif
+
+</td>
                     <td>
                         <div class="action">
                             @if($k->status == 'menunggu')

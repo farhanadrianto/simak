@@ -59,9 +59,6 @@
         </span> 👋
     </h1>
 
-    <div style="margin-top:8px; color:#9ca3af;">
-        Tahun Ajaran 2024
-    </div>
 </div>
 
     {{-- ================= INFO DOSEN ================= --}}

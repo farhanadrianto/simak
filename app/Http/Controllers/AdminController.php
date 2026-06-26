@@ -124,4 +124,20 @@ public function reportKrs()
         compact('statusKrs')
     );
 }
+
+public function paketSemester()
+{
+    $data = DB::table('paket_semester')
+        ->join('matkul', 'paket_semester.kode_matkul', '=', 'matkul.kode_matkul')
+        ->select(
+            'paket_semester.*',
+            'matkul.nama_matkul',
+            'matkul.sks',
+            'matkul.jenis'
+        )
+        ->orderBy('semester')
+        ->get();
+
+    return view('admin.paket_semester', compact('data'));
+}
 }

@@ -191,18 +191,7 @@
             >
         </div>
 
-        <!-- Input Kode Prodi -->
-        <div class="form-group">
-            <label for="kode_prodi">Kode Prodi</label>
-            <input 
-                type="text" 
-                id="kode_prodi" 
-                name="kode_prodi" 
-                placeholder="Contoh: 1010" 
-                maxlength="4"
-                required
-            >
-        </div>
+
 
         <!-- Submit Button -->
         <button type="submit">Login sebagai Mahasiswa →</button>

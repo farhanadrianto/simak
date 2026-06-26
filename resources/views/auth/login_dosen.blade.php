@@ -167,10 +167,7 @@
             <input type="password" name="password" placeholder="Masukkan password..." required>
         </div>
 
-        <div class="form-group">
-            <label>Kode Prodi</label>
-            <input type="text" name="kode_prodi" maxlength="4" placeholder="Contoh: 1010" required>
-        </div>
+
 
         <button type="submit">Login sebagai Dosen →</button>
 

@@ -154,10 +154,9 @@ th:nth-child(5), td:nth-child(5) { width: 150px; }
                     <form action="{{ route('pengumuman.destroy',$p->id) }}" method="POST" style="display:inline;">
                         @csrf
                         @method('DELETE')
-                        <button class="btn-hapus"
-                        onclick="return confirm('Yakin hapus pengumuman ini?')">
-                        Hapus
-                        </button>
+<button class="btn-hapus btn-delete-pengumuman">
+    Hapus
+</button>
                     </form>
                 </td>
             </tr>
@@ -172,5 +171,94 @@ th:nth-child(5), td:nth-child(5) { width: 150px; }
         </tbody>
     </table>
 </div>
+
+<div id="modalDelete" style="
+display:none;
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.65);
+justify-content:center;
+align-items:center;
+z-index:9999;
+">
+
+<div style="
+width:400px;
+background:#111827;
+border:1px solid #334155;
+border-radius:18px;
+padding:28px;
+text-align:center;
+">
+
+<h3 style="color:#f87171;margin-bottom:12px;">
+🗑️ Hapus Pengumuman
+</h3>
+
+<p style="color:#94a3b8;margin-bottom:25px;">
+Yakin ingin menghapus pengumuman ini?
+</p>
+
+<div style="display:flex;justify-content:center;gap:12px;">
+
+<button id="btnBatal"
+style="
+padding:10px 20px;
+background:#334155;
+color:white;
+border:none;
+border-radius:10px;
+cursor:pointer;">
+Batal
+</button>
+
+<button id="btnYa"
+style="
+padding:10px 20px;
+background:#dc2626;
+color:white;
+border:none;
+border-radius:10px;
+cursor:pointer;">
+Hapus
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+let formDelete = null;
+
+document.querySelectorAll(".btn-delete-pengumuman").forEach(btn=>{
+
+    btn.closest("form").addEventListener("submit",function(e){
+
+        e.preventDefault();
+
+        formDelete=this;
+
+        document.getElementById("modalDelete").style.display="flex";
+
+    });
+
+});
+
+document.getElementById("btnBatal").onclick=function(){
+
+    document.getElementById("modalDelete").style.display="none";
+
+};
+
+document.getElementById("btnYa").onclick=function(){
+
+    formDelete.submit();
+
+};
+
+</script>
 
 @endsection

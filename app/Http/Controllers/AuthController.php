@@ -59,12 +59,14 @@ class AuthController extends Controller
     {
         $request->validate([
             'npm' => 'required',
-            'password' => 'required',
-            'kode_prodi' => 'required'
+            'password' => 'required'
         ]);
 
+        $kodeProdi = substr($request->npm, 4, 4);
+        $angkatan = 2000 + substr($request->npm, 0, 2);
+
         $user = User::where('npm', $request->npm)
-            ->where('kode_prodi', $request->kode_prodi)
+            ->where('kode_prodi', $kodeProdi)
             ->where('role', 'mahasiswa')
             ->first();
 
@@ -79,13 +81,14 @@ class AuthController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
 
-        // 🔥 AUTO INSERT KE profilemhs + Angkatan 2024
+        $angkatan = 2000 + substr($user->npm, 0, 2);
         Profilemhs::firstOrCreate(
             ['npm' => $user->npm],
             [
-                'kode_prodi' => $user->kode_prodi,
+                'kode_prodi'   => $user->kode_prodi,
                 'nama_lengkap' => 'Mahasiswa Baru',
-                'angkatan'   => 2024 // 🔥 Tambahan angkatan otomatis
+                'angkatan'     => $angkatan,
+                'email_kampus' => $user->npm . '@student.kampus.ac.id'
             ]
         );
 
@@ -99,42 +102,52 @@ public function loginDosen(Request $request)
     // 1. Validasi Input
     $request->validate([
         'nip' => 'required',
-        'password' => 'required',
-        'kode_prodi' => 'required'
+        'password' => 'required'
     ]);
 
-    // 2. Cari User dengan filter NIP, Kode Prodi, dan Role Dosen
-    $user = User::where('nip', $request->nip)
-                ->where('kode_prodi', $request->kode_prodi)
-                ->where('role', 'dosen') // 🔥 Syarat role harus dosen
-                ->first();
+    // 2. Ambil kode prodi dari NIP
+    // Contoh NIP: 241010001
+    // 24 = angkatan
+    // 1010 = kode prodi
+    // 001 = nomor dosen
+    $kodeProdi = substr($request->nip, 2, 4);
 
-    // 3. Cek apakah user ditemukan
+    // 3. Cari User berdasarkan NIP, kode prodi, dan role dosen
+    $user = User::where('nip', $request->nip)
+        ->where('kode_prodi', $kodeProdi)
+        ->where('role', 'dosen')
+        ->first();
+
+    // 4. Cek apakah user ditemukan
     if (!$user) {
-        return back()->with('error', 'Data dosen tidak ditemukan atau prodi salah');
+        return back()->with('error', 'Data dosen tidak ditemukan');
     }
 
-    // 4. Cek Password (Manual tanpa bcrypt sesuai permintaan)
+    // 5. Cek Password
     if ($request->password !== $user->password) {
         return back()->with('error', 'Password salah');
     }
 
-    // 5. Login & Regenerate Session (Keamanan)
+    // 6. Login
     Auth::login($user);
     $request->session()->regenerate();
 
-    // 6. 🔥 AUTO INSERT KE profiledosen saat pertama kali login
-    // Menggunakan firstOrCreate agar jika data sudah ada, tidak akan double
-    ProfileDosen::firstOrCreate(
-        ['nip' => $user->nip], // Cek berdasarkan NIP
+    // 7. Auto insert ke profiledosen
+    $profile = ProfileDosen::firstOrCreate(
+        ['nip' => $user->nip],
         [
-            'kode_prodi' => $user->kode_prodi,
-            'nama_lengkap' => 'Dosen'
-            // Tambahkan kolom lain jika diperlukan di sini
+            'kode_prodi'   => $user->kode_prodi,
+            'nama_lengkap' => 'Dosen',
+            'email_kampus' => $user->nip . '@lecturer.kampus.ac.id'
         ]
     );
 
-    // 7. Redirect ke Dashboard Dosen
+    if (empty($profile->email_kampus)) {
+        $profile->email_kampus = $user->nip . '@lecturer.kampus.ac.id';
+        $profile->save();
+    }
+
+    // 8. Redirect dashboard
     return redirect('/dosen/dashboard');
 }
 
