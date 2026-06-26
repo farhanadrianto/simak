@@ -3,146 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dosen - SIMAK</title>
+    <title>Panel Dosen - SIMAK</title>
 
     <style>
-        /* GLOBAL FIX */
+        /* ===== GLOBAL RESET & FIX ===== */
         * {
             box-sizing: border-box;
         }
 
         html {
-            background: #0b1220;
+            background: #f8fafc; /* Latar belakang Off-White super bersih */
             overflow-y: auto;
         }
 
         body {
             margin: 0;
             display: flex;
-            font-family: sans-serif;
-            background: #0b1220;
-            color: white;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f8fafc;
+            color: #0f172a; /* Teks utama gelap elegan */
             min-height: 100vh;
-            /* Perbaikan agar lebar konsisten */
             width: 100%;
             overflow-x: hidden;
         }
 
-        /* ===== SIDEBAR ===== */
+        /* ===== SIDEBAR COMPONENT ===== */
         .sidebar {
-            width: 240px;
-            min-width: 240px;
-            background: #020617;
+            width: 260px;
+            min-width: 260px;
+            background: #1c253c; /* Putih bersih kontras */
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            padding: 20px;
+            padding: 30px 20px;
             position: sticky;
             top: 0;
             left: 0;
             z-index: 99;
-            border-right: 1px solid #1e293b;
+            border-right: 1px solid #e2e8f0;
+            box-shadow: 4px 0 16px rgba(148, 163, 184, 0.03);
         }
 
         .logo {
-            margin-bottom: 30px;
+            margin-bottom: 35px;
+            padding-left: 8px;
         }
 
         .logo-title {
-            font-size: 22px;
+            font-size: 24px;
             font-weight: 800;
             letter-spacing: 1px;
-            color: #3b82f6; /* Biru Dosen */
+            color: #1e40af; /* Aksen Biru Royal Khas Dosen */
         }
 
         .logo-sub {
             font-size: 11px;
+            font-weight: 700;
             color: #64748b;
-            margin-top: 4px;
-            letter-spacing: 1px;
+            margin-top: 6px;
+            letter-spacing: 1.2px;
         }
 
+        /* ===== NAVIGATION MENU ===== */
         .menu {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
         }
 
         .menu a {
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 12px;
+            padding: 12px 16px;
             border-radius: 10px;
             text-decoration: none;
-            color: #9ca3af;
-            transition: 0.2s;
+            color: #475569;
+            transition: all 0.2s ease;
             font-size: 14px;
+            font-weight: 600;
         }
 
         .menu a:hover {
-            background: #1e293b;
-            color: white;
+            background: #f1f5f9;
+            color: #1e40af;
         }
 
         .menu a.active {
-            background: linear-gradient(90deg, #1e3a8a, #1e40af);
-            color: #93c5fd;
-            font-weight: 600;
-            /* Anti Spam Click */
+            background: #eff6ff; /* Latar aktif biru lembut */
+            color: #1d4ed8; /* Teks aktif biru tegas */
+            font-weight: 700;
+            border-left: 4px solid #2563eb;
+            border-radius: 4px 10px 10px 4px;
+            padding-left: 12px; /* Penyesuaian padding karena ada border kiri */
             pointer-events: none;
             cursor: default;
         }
 
-        /* ===== MAIN AREA ===== */
+        /* ===== MAIN AREA CONTENT ===== */
         .main {
             flex: 1;
             display: flex;
             flex-direction: column;
             min-width: 0;
-            width: 100%; /* Memaksa main mengisi sisa layar */
+            width: 100%; 
         }
 
-        /* ===== HEADER STRIP (MENTOK KANAN) ===== */
+        /* ===== HEADER NAVBAR STRIP ===== */
         .header-strip {
-            background: #020617;
-            padding: 0 30px;
-            height: 70px;
+            background: #ffffff;
+            padding: 0 40px;
+            height: 75px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border-bottom: 1px solid #1e293b;
-            width: 100%; /* Garis akan mengikuti lebar main */
+            border-bottom: 1px solid #e2e8f0;
+            width: 100%;
         }
 
         .badge-dosen {
             display: inline-block;
-            background: rgba(59, 130, 246, 0.15);
-            color: #60a5fa;
+            background: #eff6ff;
+            color: #1e40af;
             padding: 8px 18px;
             border-radius: 999px;
-            font-weight: 600;
-            font-size: 13px;
-            border: 1px solid rgba(59, 130, 246, 0.3);
+            font-weight: 700;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            border: 1px solid rgba(37, 99, 235, 0.15);
             white-space: nowrap;
         }
 
         .date-info {
             font-size: 13px;
-            color: #94a3b8;
+            font-weight: 600;
+            color: #64748b;
         }
 
-        /* ===== CONTENT AREA ===== */
+        /* ===== CONTENT BODY AREA ===== */
         .content {
             flex: 1;
-            padding: 30px;
+            padding: 40px;
             width: 100%;
         }
 
-        /* LOGOUT */
+        /* ===== SYSTEM LOGOUT SYSTEM ===== */
         .bottom {
             margin-top: auto;
-            padding-bottom: 20px;
+            padding-top: 20px;
         }
 
         .logout {
@@ -150,24 +158,27 @@
             padding: 12px;
             border-radius: 10px;
             text-align: center;
-            background: #3f1d1d;
-            color: #fca5a5;
-            border: 1px solid #7f1d1d;
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid rgba(239, 68, 68, 0.2);
             cursor: pointer;
-            transition: 0.3s;
-            font-weight: 600;
+            transition: all 0.2s;
+            font-weight: 700;
+            font-size: 14px;
         }
 
         .logout:hover {
-            background: #7f1d1d;
-            color: white;
+            background: #e11d48;
+            color: #ffffff;
+            border-color: #e11d48;
+            box-shadow: 0 4px 12px rgba(225, 29, 72, 0.15);
         }
     </style>
 </head>
 
 <body>
 
-    <!-- SIDEBAR -->
+    <!-- SIDEBAR NAVIGATION -->
     <div class="sidebar">
         <div class="logo">
             <div class="logo-title">SIMAK</div>
@@ -205,7 +216,7 @@
         </div>
 
         <div class="bottom">
-            {{-- Logout hanya di Dashboard --}}
+            {{-- Logout Button --}}
             @if(request()->routeIs('dosen.dashboard'))
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
@@ -215,17 +226,17 @@
         </div>
     </div>
 
-    <!-- MAIN AREA -->
+    <!-- MAIN INTERFACE AREA -->
     <div class="main">
-        <!-- HEADER -->
+        <!-- TOP NAVBAR STRIP -->
         <div class="header-strip">
-            <div class="badge-dosen">SIMAK FIK 2026</div>
+            <div class="badge-dosen">PORTAL DOSEN FIK</div>
             <div class="date-info">
-    {{ \Carbon\Carbon::now()->locale('id')->isoFormat('dddd, DD MMMM YYYY') }}
-</div>
+                {{ \Carbon\Carbon::now()->locale('id')->isoFormat('dddd, DD MMMM YYYY') }}
+            </div>
         </div>
 
-        <!-- CONTENT -->
+        <!-- YIELD INNER CONTENT Component -->
         <div class="content">
             @yield('content')
         </div>

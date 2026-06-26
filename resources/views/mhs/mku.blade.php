@@ -3,115 +3,175 @@
 @section('content')
 
 <style>
-    /* --- CSS DASAR TABEL (DARI LO) --- */
-    .table-matkul {
-        width: 100%;
-        border-collapse: collapse;
-        background: #0f172a;
-        border-radius: 12px;
-        overflow: hidden;
+    /* ===== TITLES ===== */
+    .section-title {
+        color: #059669; /* Hijau Emerald Segar */
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        margin-bottom: 20px;
+        text-transform: uppercase;
     }
-    .table-matkul th {
-        background: rgba(16,185,129,0.1);
-        padding: 12px;
-        text-align: left;
-        color: #34d399;
-        font-size: 12px;
-    }
-    .table-matkul td {
-        padding: 12px;
-        border-bottom: 1px solid #1e293b;
-        color: #e2e8f0;
-    }
-    .checkbox-cell { text-align: center; }
-    .checkbox-cell input { width: 18px; height: 18px; cursor: pointer; }
-    .checkbox-cell input:disabled { cursor: not-allowed; opacity: 0.5; }
-    
-    .badge {
-        padding: 4px 10px;
-        border-radius: 8px;
-        font-size: 12px;
-        background: rgba(16,185,129,0.1);
-        color: #34d399;
-    }
-    .badge.penuh { background: rgba(239,68,68,0.1); color: #fca5a5; }
 
-    .btn-simpan {
-        margin-top: 20px;
-        padding: 10px 25px;
-        background: #34d399;
-        border: none;
-        border-radius: 8px;
-        font-weight: bold;
-        cursor: pointer;
-        color: #0f172a;
-        transition: 0.3s;
-    }
-    .btn-simpan:hover { background: #10b981; transform: translateY(-2px); }
-
-.btn-simpan:disabled{
-    background:#475569;
-    color:#94a3b8;
-    cursor:not-allowed;
-    transform:none;
-}
-
-    /* --- CSS BARU SESUAI GAMBAR (GLASSMORPHISM) --- */
+    /* ===== SKS CARD (SOFT LIGHT THEME) ===== */
     .sks-card {
-        background: rgba(30, 41, 59, 0.5); /* Semi transparan */
-        border: 1px solid rgba(56, 189, 248, 0.2); /* Border biru tipis */
-        backdrop-filter: blur(10px);
-        border-radius: 12px;
-        padding: 20px;
-        margin-bottom: 15px;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 24px;
+        margin-bottom: 20px;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        box-shadow: 0 4px 12px rgba(148, 163, 184, 0.05);
     }
-
+    
     .sks-info-text h4 {
         margin: 0;
-        color: #38bdf8; /* Warna biru muda sesuai gambar */
+        color: #0f172a;
         font-size: 16px;
+        font-weight: 700;
         display: flex;
         align-items: center;
         gap: 8px;
     }
-
-    .sks-info-text p {
-        margin: 5px 0 0 0;
-        color: #94a3b8;
-        font-size: 13px;
+    
+    .sks-info-text p { 
+        margin: 6px 0 0 0; 
+        color: #64748b; 
+        font-size: 13px; 
+        font-weight: 500;
     }
 
-    /* Progress Bar Kecil di Kanan */
+    /* ===== PROGRESS BAR ===== */
     .progress-container {
-        width: 150px;
-        height: 8px;
-        background: #0f172a;
-        border-radius: 10px;
+        width: 160px;
+        height: 10px;
+        background: #f1f5f9;
+        border-radius: 999px;
         overflow: hidden;
-        border: 1px solid rgba(255,255,255,0.05);
+        border: 1px solid #e2e8f0;
     }
-
+    
     .progress-bar {
         height: 100%;
-        background: linear-gradient(90deg, #38bdf8, #34d399); /* Gradasi Biru ke Hijau */
-        transition: width 0.5s ease;
+        background: linear-gradient(90deg, #10b981, #059669);
+        transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* Alert Info sesuai gambar */
+    /* ===== ALERT CUSTOM ===== */
     .alert-custom {
-        background: rgba(16, 185, 129, 0.05);
+        background: #ecfdf5;
         border: 1px solid rgba(16, 185, 129, 0.2);
-        color: #34d399;
-        padding: 12px 20px;
-        border-radius: 10px;
-        margin-bottom: 25px;
+        color: #065f46;
+        padding: 14px 20px;
+        border-radius: 12px;
+        margin-bottom: 24px;
         font-size: 14px;
+        font-weight: 500;
         display: flex;
         align-items: center;
         gap: 10px;
+    }
+
+    /* ===== TABLE CLEAN STYLE ===== */
+    .table-container {
+        background: #ffffff;
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(148, 163, 184, 0.05);
+        margin-bottom: 24px;
+    }
+
+    .table-matkul {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+    }
+    
+    .table-matkul th {
+        background: #f8fafc;
+        padding: 16px 14px;
+        color: #475569;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .table-matkul td {
+        padding: 16px 14px;
+        border-bottom: 1px solid #f1f5f9;
+        color: #334155;
+        font-size: 14px;
+    }
+
+    .table-matkul tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    /* ===== CHECKBOX DESIGN ===== */
+    .checkbox-cell { 
+        text-align: center; 
+    }
+    
+    .checkbox-cell input { 
+        width: 18px; 
+        height: 18px; 
+        cursor: pointer; 
+        accent-color: #10b981;
+    }
+    
+    .checkbox-cell input:disabled { 
+        cursor: not-allowed; 
+        opacity: 0.5; 
+    }
+    
+    /* ===== BADGES ===== */
+    .badge {
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 700;
+        background: #ecfdf5;
+        color: #065f46;
+        border: 1px solid rgba(16, 185, 129, 0.15);
+        display: inline-block;
+    }
+    
+    .badge.penuh { 
+        background: #fef2f2; 
+        color: #991b1b; 
+        border-color: rgba(239, 68, 68, 0.15);
+    }
+
+    /* ===== BUTTON ACTIONS ===== */
+    .btn-simpan {
+        padding: 12px 28px;
+        background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        color: #ffffff;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+    }
+    
+    .btn-simpan:hover:not(:disabled) { 
+        opacity: 0.95;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(16, 185, 129, 0.25);
+    }
+
+    .btn-simpan:disabled {
+        background: #e2e8f0;
+        color: #94a3b8;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
     }
 </style>
 
@@ -119,94 +179,81 @@
     $maxSks = auth()->user()->semester <= 2 ? 20 : 24;
 @endphp
 
-<!-- Card SKS sesuai Gambar -->
+<div class="section-title">Mata Kuliah Umum (MKU)</div>
+
 <div class="sks-card">
     <div class="sks-info-text">
-<h4>
-    📚 SKS Anda:
-    <span id="displaySks">{{ $total_sks_sekarang }}</span>/{{ $maxSks }} SKS
-</h4>
-
-<p>
-    Sisa kuota:
-    <span id="displayQuota">{{ $maxSks - $total_sks_sekarang }}</span> SKS
-</p>
+        <h4>📚 SKS Anda: <span id="displaySks">{{ $total_sks_sekarang }}</span>/{{ $maxSks }} SKS</h4>
+        <p>Sisa kuota: <span id="displayQuota">{{ $maxSks - $total_sks_sekarang }}</span> SKS</p>
     </div>
     <div class="progress-container">
-        <div id="progressBar"
-     class="progress-bar"
-     style="width: {{ ($total_sks_sekarang / $maxSks) * 100 }}%;">
-</div>
+        <div id="progressBar" class="progress-bar" style="width: {{ ($total_sks_sekarang / $maxSks) * 100 }}%;"></div>
     </div>
 </div>
 
-<!-- Alert Info sesuai Gambar -->
 <div class="alert-custom">
-    📌 Pilih matkul yang ingin diambil, kemudian klik tombol Simpan
+    📌 Silakan tentukan pilihan mata kuliah umum (MKU) yang ingin diambil, kemudian tekan tombol Simpan di bawah tabel.
 </div>
 
 @if(session('success'))
-    <div class="alert-custom" style="border-color: #34d399; background: rgba(52, 211, 153, 0.1);">
+    <div class="alert-custom" style="border-color: #10b981; background: #ecfdf5; color: #065f46;">
         ✅ {{ session('success') }}
     </div>
 @endif
 
 <form action="{{ route('mhs.mku.store') }}" method="POST">
     @csrf
+    <div class="table-container">
+        <table class="table-matkul">
+            <thead>
+                <tr>
+                    <th style="width: 50px; text-align: center;">NO</th>
+                    <th>KODE</th>
+                    <th>MATA KULIAH</th>
+                    <th>SKS</th>
+                    <th>KELAS</th>
+                    <th>KAPASITAS</th>
+                    <th>HARI</th>
+                    <th>JAM JADWAL</th>
+                    <th style="text-align: center; width: 80px;">PILIH</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($matkul as $i => $row)
+                    @php
+                        $sudahAmbil = is_array($sudah) && in_array($row->kode_matkul, $sudah);
+                        $penuh = $row->jumlah_terisi >= $row->kapasitas;
+                    @endphp
+                    <tr @if($sudahAmbil) style="opacity: 0.5; background: #f8fafc;" @endif>
+                        <td style="text-align: center; color: #94a3b8; font-weight: 500;">{{ $i + 1 }}</td>
+                        <td style="font-weight: 600; color: #475569;">{{ $row->kode_matkul }}</td>
+                        <td style="font-weight: 600; color: #0f172a;">{{ $row->nama_matkul }}</td>
+                        <td><b class="sks-val" style="color: #0f172a;">{{ $row->sks }}</b></td>
+                        <td style="font-weight: 500;">{{ $row->kelas }}</td>
+                        <td>
+                            <span class="badge {{ $penuh ? 'penuh' : '' }}">
+                                {{ $row->jumlah_terisi }}/{{ $row->kapasitas }}
+                            </span>
+                        </td>
+                        <td style="font-weight: 500;">{{ $row->hari }}</td>
+                        <td style="color: #475569; font-size: 13px;">{{ $row->jam_mulai }} - {{ $row->jam_selesai }}</td>
+                        <td class="checkbox-cell">
+                            <input type="checkbox"
+                                name="kode_matkul[]"
+                                class="matkul-cb"
+                                value="{{ $row->kode_matkul }}"
+                                data-sks="{{ $row->sks }}"
+                                data-nama="{{ $row->nama_matkul }}"
+                                {{ $sudahAmbil || $penuh ? 'disabled' : '' }}
+                                {{ $sudahAmbil ? 'checked' : '' }}>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 
-    <table class="table-matkul">
-        <thead>
-            <tr>
-                <th>NO</th>
-                <th>KODE</th>
-                <th>MATA KULIAH</th>
-                <th>SKS</th>
-                <th>KELAS</th>
-                <th>KAPASITAS</th>
-                <th>HARI</th>
-                <th>JAM</th>
-                <th style="text-align:center;">PILIH</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($matkul as $i => $row)
-            @php
-                $sudahAmbil = is_array($sudah) && in_array($row->kode_matkul, $sudah);
-                $penuh = $row->jumlah_terisi >= $row->kapasitas;
-            @endphp
-<tr
-@if($sudahAmbil)
-style="opacity:.45;filter:grayscale(.3);background:rgba(255,255,255,.02);"
-@endif
->
-                <td>{{ $i+1 }}</td>
-                <td>{{ $row->kode_matkul }}</td>
-                <td>{{ $row->nama_matkul }}</td>
-                <td><b class="sks-val">{{ $row->sks }}</b></td>
-                <td>{{ $row->kelas }}</td>
-                <td>
-                    <span class="badge {{ $penuh ? 'penuh' : '' }}">
-                        {{ $row->jumlah_terisi }}/{{ $row->kapasitas }}
-                    </span>
-                </td>
-                <td>{{ $row->hari }}</td>
-                <td>{{ $row->jam_mulai }} - {{ $row->jam_selesai }}</td>
-                <td class="checkbox-cell">
-                        <input type="checkbox"
-                            name="kode_matkul[]"
-                            class="matkul-cb"
-                            value="{{ $row->kode_matkul }}"
-                            data-sks="{{ $row->sks }}"
-                            data-nama="{{ $row->nama_matkul }}"
-                           {{ $sudahAmbil || $penuh ? 'disabled' : '' }}
-                           {{ $sudahAmbil ? 'checked' : '' }}>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
-
-    <div style="text-align: right;">
+    <div style="text-align: right; margin-bottom: 40px;">
         <button
             type="submit"
             class="btn-simpan"
@@ -228,13 +275,10 @@ const MAX_SKS = {{ $maxSks }};
 const INITIAL_SKS = {{ $total_sks_sekarang }};
 
 function updateLogic() {
-
     let addedSks = 0;
+    const newlyChecked = document.querySelectorAll('.matkul-cb:checked:not([disabled-server])');
 
-    const newlyChecked = document.querySelectorAll(
-        '.matkul-cb:checked:not([disabled-server])'
-    );
-
+    // Tombol simpan hanya aktif jika ada pilihan modifikasi baru
     btnSimpan.disabled = (newlyChecked.length === 0);
 
     newlyChecked.forEach(cb => {
@@ -244,107 +288,74 @@ function updateLogic() {
     const total = INITIAL_SKS + addedSks;
     const sisa = MAX_SKS - total;
 
-    // Update widget
+    // Update elemen representasi Widget SKS
     displaySks.innerText = total;
     displayQuota.innerText = sisa;
     progressBar.style.width = (total / MAX_SKS * 100) + "%";
 
-    // ==========================
-    // RESET
-    // ==========================
-
+    // ==========================================
+    // STAGE 1: RESET OPERATIONAL BARIS JADWAL
+    // ==========================================
     checkboxes.forEach(cb => {
-
         if (!cb.hasAttribute("disabled-server")) {
-
             cb.disabled = false;
-
             const row = cb.closest("tr");
             row.style.opacity = "1";
-            row.style.filter = "none";
-
+            row.style.background = "none";
             cb.style.cursor = "pointer";
         }
-
     });
 
-    // ==========================
-    // BATAS SKS
-    // ==========================
-
+    // ==========================================
+    // STAGE 2: FORCE LIMIT BEBAN SKS MAKSIMAL
+    // ==========================================
     checkboxes.forEach(cb => {
-
         if (!cb.hasAttribute("disabled-server") && !cb.checked) {
-
             const matkulSks = parseInt(cb.dataset.sks);
-
             if (matkulSks > sisa) {
-
                 cb.disabled = true;
-
                 const row = cb.closest("tr");
                 row.style.opacity = "0.45";
-                row.style.filter = "grayscale(.3)";
-
+                row.style.background = "#f8fafc";
                 cb.style.cursor = "not-allowed";
             }
-
         }
-
     });
 
-    // ==========================
-    // HANYA SATU KELAS
-    // ==========================
-
+    // ==========================================
+    // STAGE 3: VALIDASI KELAS GANDA (1 MATKUL)
+    // ==========================================
     const namaDipilih = [];
-
     checkboxes.forEach(cb => {
-
         if (cb.checked) {
             namaDipilih.push(cb.dataset.nama);
         }
-
     });
 
     checkboxes.forEach(cb => {
-
         if (cb.hasAttribute("disabled-server")) return;
 
-        if (
-            !cb.checked &&
-            namaDipilih.includes(cb.dataset.nama)
-        ) {
-
+        if (!cb.checked && namaDipilih.includes(cb.dataset.nama)) {
             cb.disabled = true;
-
             const row = cb.closest("tr");
             row.style.opacity = "0.45";
-            row.style.filter = "grayscale(.3)";
-
+            row.style.background = "#f8fafc";
             cb.style.cursor = "not-allowed";
         }
-
     });
-
 }
 
-// ==========================
-// INISIALISASI
-// ==========================
-
+// ==========================================
+// INITIALIZER SETUP ON LOAD
+// ==========================================
 checkboxes.forEach(cb => {
-
     if (cb.disabled) {
         cb.setAttribute("disabled-server", "true");
     }
-
     cb.addEventListener("change", updateLogic);
-
 });
 
+// Run logic execution pertama kali halaman dirender
 updateLogic();
-
 </script>
-
 @endsection

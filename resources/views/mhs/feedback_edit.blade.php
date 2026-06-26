@@ -3,262 +3,254 @@
 @section('content')
 
 <style>
+    /* ===== TITLE ===== */
+    .section-title {
+        color: #059669; /* Hijau Emerald Segar */
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+    }
+
+    /* ===== FORM CARD (SOFT LIGHT THEME) ===== */
     .form-card {
-        background: #0f172a;
-        padding: 25px;
-        border-radius: 14px;
-        border: 1px solid #1e293b;
+        background: #ffffff; /* Mengganti warna gelap ke putih solid */
+        padding: 28px;
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
         margin-bottom: 30px;
+        box-shadow: 0 4px 12px rgba(148, 163, 184, 0.05);
     }
 
-    .input, textarea {
+    /* ===== INPUTS & TEXTAREA ===== */
+    .input, textarea, select {
         width: 100%;
-        padding: 12px;
-        border-radius: 8px;
-        border: 1px solid #1e293b;
-        background: #020617;
-        color: white;
+        padding: 12px 16px;
+        border-radius: 10px;
+        border: 1px solid #cbd5e1;
+        background: #ffffff;
+        color: #0f172a;
         outline: none;
+        font-size: 14px;
+        font-family: inherit;
+        transition: all 0.2s ease;
     }
 
+    /* Style khusus untuk NPM / Readonly */
     .input-readonly {
-        background: #334155 !important; 
-        color: #94a3b8 !important;
+        background: #f1f5f9 !important; 
+        color: #64748b !important;
         cursor: not-allowed; 
-        border: 1px solid #475569;
+        border: 1px solid #e2e8f0;
     }
 
-    .input:focus:not(.input-readonly), textarea:focus {
-        border-color: #34d399;
+    .input:focus:not(.input-readonly), textarea:focus, select:focus {
+        border-color: #10b981;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
     }
 
+    /* ===== SELECT CUSTOM ROW ===== */
+    select {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' fill='%2364748b' viewBox='0 0 16 16'%3E%3Cpath d='M1.5 5l6 6 6-6'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 16px center;
+        padding-right: 45px;
+    }
+
+    select option {
+        background: #ffffff;
+        color: #0f172a;
+    }
+
+    /* ===== RATING SYSTEM STYLE ===== */
     .rating-box {
         display: flex;
-        gap: 12px;
+        gap: 10px;
         margin-top: 10px;
+        flex-wrap: wrap;
     }
 
     .rating-box label {
-        background: #020617;
-        border: 1px solid #1e293b;
-        padding: 10px 15px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        padding: 10px 16px;
         border-radius: 10px;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
         display: flex;
         align-items: center;
         gap: 8px;
+        user-select: none;
+        font-size: 14px;
+        font-weight: 500;
+        color: #475569;
     }
 
     .rating-box input {
         display: none;
     }
 
+    .rating-box label:hover {
+        background: #f1f5f9;
+        border-color: #cbd5e1;
+    }
+
     .rating-box label:has(input:checked) {
-        border-color: #34d399;
-        background: rgba(52, 211, 153, 0.1);
+        border-color: #10b981;
+        background: #ecfdf5;
+        color: #065f46;
+        font-weight: 600;
     }
 
-    .rating-box input:checked + span {
-        color: #facc15;
-        font-weight: bold;
-    }
-
+    /* ===== BUTTONS ===== */
     .btn {
-        background: #34d399;
-        color: #020617;
-        padding: 12px 20px;
+        background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+        color: #ffffff;
+        padding: 12px 24px;
         border: none;
-        border-radius: 8px;
-        font-weight: bold;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 14px;
         cursor: pointer;
+        transition: opacity 0.2s, box-shadow 0.2s;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
     }
 
     .btn:hover {
-        background: #10b981;
+        opacity: 0.95;
+        box-shadow: 0 6px 16px rgba(16, 185, 129, 0.25);
     }
 
-.btn-back {
-    background: #334155; /* abu2 gelap */
-    color: #e2e8f0;
-    padding: 12px 20px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: bold;
-    display: inline-block;
-    transition: 0.2s;
-}
+    .btn-back {
+        background: #f1f5f9; 
+        color: #475569;
+        padding: 12px 20px;
+        border-radius: 10px;
+        border: 1px solid #cbd5e1;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 14px;
+        display: inline-block;
+        transition: all 0.2s ease;
+    }
 
-.btn-back:hover {
-    background: #475569;
-}
+    .btn-back:hover {
+        background: #e2e8f0;
+        color: #0f172a;
+    }
 
-select{
-    width:100%;
-    background:#020617;
-    border:1px solid #334155;
-    color:white;
-    padding:14px;
-    border-radius:12px;
-    outline:none;
-    font-size:15px;
-    transition:.3s;
-    appearance:none;
-    -webkit-appearance:none;
-    -moz-appearance:none;
-
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M1.5 5l6 6 6-6'/%3E%3C/svg%3E");
-    background-repeat:no-repeat;
-    background-position:right 15px center;
-    padding-right:45px;
-}
-
-select:focus{
-    border-color:#34d399;
-    box-shadow:0 0 0 2px rgba(52,211,153,.15);
-}
-
-select option{
-    background:#0f172a;
-    color:white;
-}
+    /* ===== LABELS ===== */
+    .form-label {
+        color: #475569;
+        font-weight: 600;
+        font-size: 14px;
+        display: block;
+        margin-bottom: 8px;
+    }
 </style>
 
+<div class="section-title">Edit Feedback</div>
+
 <div class="form-card">
-    <h3 style="color: white; margin-bottom: 20px;">Edit Feedback</h3>
+    <h3 style="color: #0f172a; font-size: 18px; font-weight: 700; margin-bottom: 24px;">✏️ Perbarui Data Feedback</h3>
 
     <form action="{{ route('mhs.feedback.update', $data->id) }}" method="POST">
         @csrf
-        
 
-        <!-- NPM -->
-        <div style="margin-bottom: 15px;">
-            <label style="color: #94a3b8;">NPM</label>
+        <div style="margin-bottom: 18px;">
+            <label class="form-label">NPM</label>
             <input type="text" class="input input-readonly" value="{{ auth()->user()->npm }}" readonly>
         </div>
 
-        <!-- Kategori -->
-<div style="margin-bottom: 15px;">
-    <label style="color: #94a3b8;">Kategori Feedback</label>
+        <div style="margin-bottom: 18px;">
+            <label class="form-label">Kategori Feedback</label>
+            <select name="kategori" id="kategori" class="input" required>
+                <option value="dosen" {{ $data->kategori == 'dosen' ? 'selected' : '' }}>Dosen</option>
+                <option value="pengajaran" {{ $data->kategori == 'pengajaran' ? 'selected' : '' }}>Pengajaran</option>
+                <option value="fasilitas" {{ $data->kategori == 'fasilitas' ? 'selected' : '' }}>Fasilitas</option>
+            </select>
+        </div>
 
-    <select name="kategori" id="kategori" class="input" required>
+        <div id="nipBox" style="margin-bottom: 18px;">
+            <label class="form-label">NIP Dosen</label>
+            <select name="nip" id="nip">
+                <option value="">-- Pilih Dosen --</option>
+                @foreach($dosen as $d)
+                    <option value="{{ $d->nip }}" {{ $data->nip == $d->nip ? 'selected' : '' }}>
+                        {{ $d->nip }} - {{ $d->nama_lengkap }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
 
-        <option value="dosen"
-            {{ $data->kategori == 'dosen' ? 'selected' : '' }}>
-            Dosen
-        </option>
-
-        <option value="pengajaran"
-            {{ $data->kategori == 'pengajaran' ? 'selected' : '' }}>
-            Pengajaran
-        </option>
-
-        <option value="fasilitas"
-            {{ $data->kategori == 'fasilitas' ? 'selected' : '' }}>
-            Fasilitas
-        </option>
-
-    </select>
-</div>
-
-<!-- NIP -->
-<div id="nipBox" style="margin-bottom:15px;">
-
-    <label style="color: #94a3b8;">
-        NIP Dosen
-    </label>
-
-<select name="nip" id="nip">
-
-    <option value="">-- Pilih Dosen --</option>
-
-    @foreach($dosen as $d)
-        <option
-            value="{{ $d->nip }}"
-            {{ $data->nip == $d->nip ? 'selected' : '' }}>
-            {{ $d->nip }} - {{ $d->nama_lengkap }}
-        </option>
-    @endforeach
-
-</select>
-
-</div>
-
-        <!-- Rating -->
-        <div style="margin-bottom: 15px;">
-            <label style="color: #94a3b8;">Rating</label>
+        <div style="margin-bottom: 18px;">
+            <label class="form-label">Rating Kepuasan</label>
             <div class="rating-box">
                 @for($i=1; $i<=5; $i++)
                     <label>
-                        <input type="radio" name="rating" value="{{ $i }}" 
-                            {{ $data->rating == $i ? 'checked' : '' }} required>
+                        <input type="radio" name="rating" value="{{ $i }}" {{ $data->rating == $i ? 'checked' : '' }} required>
                         <span>{{ str_repeat('⭐', $i) }} {{ $i }}</span>
                     </label>
                 @endfor
             </div>
         </div>
 
-        <!-- Isi -->
-        <div style="margin-bottom: 15px;">
-            <label style="color: #94a3b8;">Isi Feedback</label>
-            <textarea name="isi" rows="4" required>{{ $data->isi }}</textarea>
+        <div style="margin-bottom: 18px;">
+            <label class="form-label">Isi Feedback</label>
+            <textarea name="isi" rows="4" placeholder="Bagaimana pengalaman Anda?" required>{{ $data->isi }}</textarea>
         </div>
 
-        <!-- Tanggal -->
-        <div style="margin-bottom: 20px;">
-            <label style="color: #94a3b8;">Tanggal</label>
-<input
-    type="datetime-local"
-    name="tanggal"
-    id="tanggal"
-    class="input"
-    required>
+        <div style="margin-bottom: 24px;">
+            <label class="form-label">Tanggal</label>
+            <input type="datetime-local" name="tanggal" id="tanggal" class="input" required>
         </div>
 
-<div style="display:flex; gap:10px;">
-    <button type="submit" class="btn">Update Feedback</button>
-
-    <a href="{{ route('mhs.feedback') }}" class="btn-back">
-        ← Kembali
-    </a>
-</div>
+        <div style="display: flex; gap: 12px; align-items: center;">
+            <button type="submit" class="btn">Update Feedback</button>
+            <a href="{{ route('mhs.feedback') }}" class="btn-back">
+                ← Kembali
+            </a>
+        </div>
+    </form>
 </div>
 
 <script>
+    const kategori = document.getElementById('kategori');
+    const nipBox = document.getElementById('nipBox');
 
-const kategori =
-    document.getElementById('kategori');
-
-const nipBox =
-    document.getElementById('nipBox');
-
-function toggleNip(){
-
-    if(
-        kategori.value === 'dosen' ||
-        kategori.value === 'pengajaran'
-    ){
-        nipBox.style.display = 'block';
-    }else{
-        nipBox.style.display = 'none';
+    function toggleNip() {
+        if (kategori.value === 'dosen' || kategori.value === 'pengajaran') {
+            nipBox.style.display = 'block';
+            document.getElementById('nip').setAttribute('required', 'required');
+        } else {
+            nipBox.style.display = 'none';
+            document.getElementById('nip').removeAttribute('required');
+        }
     }
 
-}
+    // Jalankan saat pertama kali halaman dimuat
+    toggleNip();
 
-toggleNip();
+    kategori.addEventListener('change', toggleNip);
 
-kategori.addEventListener('change', toggleNip);
-
-const now = new Date();
-
-const year = now.getFullYear();
-const month = String(now.getMonth() + 1).padStart(2, '0');
-const day = String(now.getDate()).padStart(2, '0');
-const hours = String(now.getHours()).padStart(2, '0');
-const minutes = String(now.getMinutes()).padStart(2, '0');
-
-document.getElementById('tanggal').value =
-`${year}-${month}-${day}T${hours}:${minutes}`;
+    // Ambil data tanggal yang tersimpan dari database lama
+    // Membantu memvalidasi format datetime-local (YYYY-MM-DDTHH:MM)
+    const oldDateStr = "{{ $data->tanggal }}"; 
+    if(oldDateStr) {
+        const dateObj = new Date(oldDateStr);
+        if(!isNaN(dateObj.getTime())) {
+            const year = dateObj.getFullYear();
+            const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const day = String(dateObj.getDate()).padStart(2, '0');
+            const hours = String(dateObj.getHours()).padStart(2, '0');
+            const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+            document.getElementById('tanggal').value = `${year}-${month}-${day}T${hours}:${minutes}`;
+        }
+    }
 </script>
 
 @endsection

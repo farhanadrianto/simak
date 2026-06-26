@@ -3,120 +3,69 @@
 @section('content')
 
 <style>
-    :root {
-        --bg-main: #0b1120;
-        --bg-card: #111827;
-        --bg-input: #1e293b;
-        --bg-readonly: #161e2b;
-        --text-primary: #f9fafb;
-        --text-secondary: #94a3b8;
-        --accent-indigo: #4f46e5;
-        --accent-blue: #3b82f6;
-        --accent-orange: #f59e0b; /* Warna gembok */
-    }
-
+    /* Tema Terang (Konsisten dengan Create & Index) */
     .form-container {
-        max-width: 600px;
+        max-width: 700px;
         margin: 20px auto;
-        background: var(--bg-card);
-        padding: 25px;
-        border-radius: 12px;
-        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        font-family: 'Inter', sans-serif;
+        background: #ffffff5b;
+        padding: 30px;
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
     }
 
-    h1 { font-size: 1.25rem; font-weight: 700; margin-bottom: 4px; color: var(--text-primary); }
-    .subtitle { color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 25px; }
+    h1 { font-size: 1.5rem; margin-bottom: 5px; color: #0f172a; }
+    .subtitle { color: #64748b; font-size: 0.9rem; margin-bottom: 30px; }
 
-    .form-row {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 15px;
-        margin-bottom: 15px;
-    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px; }
+    .field-label { display: block; font-size: 0.8rem; color: #475569; margin-bottom: 6px; font-weight: 600; text-transform: uppercase; }
 
-    .field-label {
-        display: block;
-        font-size: 0.85rem;
-        color: var(--text-secondary);
-        margin-bottom: 6px;
-    }
-
-    /* Wrapper untuk posisi gembok */
-    .input-wrapper {
-        position: relative;
-        display: flex;
-        align-items: center;
-    }
-
+    .input-wrapper { position: relative; display: flex; align-items: center; }
     input, select {
         width: 100%;
-        padding: 10px 12px;
+        padding: 10px 14px;
         border-radius: 8px;
-        border: 1.5px solid transparent;
-        background: var(--bg-input);
-        color: white;
-        font-size: 0.9rem;
+        border: 1px solid #cbd5e1;
+        background: #ffffff;
+        color: #1e293b;
+        font-size: 0.95rem;
         box-sizing: border-box;
-        transition: all 0.2s;
     }
 
-    /* Padding kanan ekstra khusus untuk input readonly agar teks tidak tertutup gembok */
+    /* Style khusus Readonly */
     input[readonly] {
-        background: var(--bg-readonly);
-        color: #94a3b8;
+        background: #f8fafc;
+        color: #64748b;
         cursor: not-allowed;
-        padding-right: 35px; 
-        border: 1.5px solid rgba(255, 255, 255, 0.05);
+        border: 1px solid #e2e8f0;
+    }
+
+    .readonly-wrapper::after {
+        content: '🔒';
+        position: absolute;
+        right: 12px;
+        font-size: 0.8rem;
+        opacity: 0.5;
     }
 
     input:focus:not([readonly]), select:focus {
         outline: none;
-        border-color: var(--accent-indigo);
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
 
-    /* Ikon Gembok menggunakan CSS Pseudo-element */
-    .readonly-wrapper::after {
-        content: '🔒'; /* Menggunakan emoji agar simple */
-        position: absolute;
-        right: 12px;
-        font-size: 0.8rem;
-        opacity: 0.7;
-        filter: sepia(1) saturate(5) hue-rotate(10deg); /* Membuat emoji agak orange emas */
-    }
+    .button-group { display: flex; gap: 10px; margin-top: 30px; padding-top: 20px; border-top: 1px solid #f1f5f9; }
+    .btn-update { height: 40px; padding: 0 24px; font-weight: 600; border-radius: 8px; border: none; cursor: pointer; background: #1e3a8a; color: white; }
+    .btn-back { height: 40px; padding: 0 24px; font-weight: 600; border-radius: 8px; border: 1px solid #e2e8f0; cursor: pointer; background: #f8fafc; color: #475569; text-decoration: none; display: flex; align-items: center; }
+    .btn-update:hover { background: #1e40af; }
+    .btn-back:hover { background: #f1f5f9; }
 
-    .button-group {
-        display: flex;
-        gap: 10px;
-        margin-top: 25px;
-    }
-
-    .btn-update, .btn-back {
-        height: 40px;
-        padding: 0 20px;
-        font-size: 0.85rem;
-        font-weight: 600;
-        border-radius: 8px;
-        text-decoration: none;
-        cursor: pointer;
-        border: none;
-        transition: 0.2s;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .btn-update { background: linear-gradient(90deg, #059669, #10b981); color: white; }
-    .btn-back { background: #374151; color: #d1d5db; }
-    .btn-update:hover { filter: brightness(1.1); transform: translateY(-1px); }
-
-    @media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
+    @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
 </style>
 
 <div class="form-container">
     <h1>Edit Mata Kuliah</h1>
-    <p class="subtitle">Data dengan ikon gembok tidak dapat diubah</p>
+    <p class="subtitle">Data dengan ikon gembok tidak dapat diubah.</p>
 
     <form action="{{ route('matkul.update', $matkul->id) }}" method="POST">
         @csrf
@@ -124,55 +73,53 @@
 
         <div class="form-row">
             <div>
-                <label class="field-label">Kode Mata Kuliah <span style="color:red">*</span></label>
+                <label class="field-label">Kode Mata Kuliah *</label>
                 <div class="input-wrapper readonly-wrapper">
                     <input name="kode_matkul" value="{{ $matkul->kode_matkul }}" readonly>
                 </div>
             </div>
             <div>
-                <label class="field-label">Nama Mata Kuliah <span style="color:red">*</span></label>
-                <input name="nama_matkul" value="{{ $matkul->nama_matkul }}">
+                <label class="field-label">Nama Mata Kuliah *</label>
+                <input name="nama_matkul" value="{{ $matkul->nama_matkul }}" required>
             </div>
         </div>
 
         <div class="form-row">
             <div>
-                <label class="field-label">Kelas <span style="color:red">*</span></label>
-                <input name="kelas" value="{{ $matkul->kelas }}">
+                <label class="field-label">Kelas *</label>
+                <input name="kelas" value="{{ $matkul->kelas }}" required>
             </div>
             <div>
                 <label class="field-label">Hari</label>
-                <select name="hari">
-                    <option value="Senin" {{ $matkul->hari == 'Senin' ? 'selected' : '' }}>Senin</option>
-                    <option value="Selasa" {{ $matkul->hari == 'Selasa' ? 'selected' : '' }}>Selasa</option>
-                    <option value="Rabu" {{ $matkul->hari == 'Rabu' ? 'selected' : '' }}>Rabu</option>
-                    <option value="Kamis" {{ $matkul->hari == 'Kamis' ? 'selected' : '' }}>Kamis</option>
-                    <option value="Jumat" {{ $matkul->hari == 'Jumat' ? 'selected' : '' }}>Jumat</option>
+                <select name="hari" required>
+                    @foreach(['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'] as $hari)
+                        <option value="{{ $hari }}" {{ $matkul->hari == $hari ? 'selected' : '' }}>{{ $hari }}</option>
+                    @endforeach
                 </select>
             </div>
         </div>
 
         <div class="form-row">
             <div>
-                <label class="field-label">Jam Mulai <span style="color:red">*</span></label>
-                <input type="time" name="jam_mulai" value="{{ $matkul->jam_mulai }}">
+                <label class="field-label">Jam Mulai *</label>
+                <input type="time" name="jam_mulai" value="{{ $matkul->jam_mulai }}" required>
             </div>
             <div>
-                <label class="field-label">Jam Selesai <span style="color:red">*</span></label>
-                <input type="time" name="jam_selesai" value="{{ $matkul->jam_selesai }}">
+                <label class="field-label">Jam Selesai *</label>
+                <input type="time" name="jam_selesai" value="{{ $matkul->jam_selesai }}" required>
             </div>
         </div>
 
         <div class="form-row">
             <div>
-                <label class="field-label">SKS <span style="color:red">*</span></label>
+                <label class="field-label">SKS *</label>
                 <div class="input-wrapper readonly-wrapper">
                     <input name="sks" value="{{ $matkul->sks }}" readonly>
                 </div>
             </div>
             <div>
                 <label class="field-label">Jenis</label>
-                <select name="jenis">
+                <select name="jenis" required>
                     <option value="MKR" {{ $matkul->jenis == 'MKR' ? 'selected' : '' }}>MKR</option>
                     <option value="MKU" {{ $matkul->jenis == 'MKU' ? 'selected' : '' }}>MKU</option>
                 </select>
@@ -181,19 +128,19 @@
 
         <div class="form-row">
             <div>
-                <label class="field-label">Kode Program Studi <span style="color:red">*</span></label>
+                <label class="field-label">Kode Program Studi *</label>
                 <div class="input-wrapper readonly-wrapper">
                     <input name="kode_prodi" value="{{ $matkul->kode_prodi }}" readonly>
                 </div>
             </div>
             <div>
                 <label class="field-label">Kapasitas</label>
-                <input type="number" name="kapasitas" value="{{ $matkul->kapasitas }}">
+                <input type="number" name="kapasitas" value="{{ $matkul->kapasitas }}" required>
             </div>
         </div>
 
         <div class="button-group">
-            <button type="submit" class="btn-update">Update Data</button>
+            <button type="submit" class="btn-update">Simpan Perubahan</button>
             <a href="/admin/matkul" class="btn-back">Kembali</a>
         </div>
     </form>

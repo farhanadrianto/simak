@@ -3,351 +3,386 @@
 @section('content')
 
 <style>
-/* Update pada bagian krs-wrapper */
-.krs-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-    
-    /* 1. Gedein ini (vh = % tinggi layar). Coba 80 atau 85 */
-    min-height: 80vh; 
-    
-    /* 2. Tambah padding bottom biar gak nempel banget ke ujung bawah browser */
-    padding-bottom: 100px; 
-}
+    /* ===== SECTION TITLES ===== */
+    .section-title {
+        color: #059669; /* Hijau Emerald Segar */
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        margin-bottom: 6px;
+        text-transform: uppercase;
+    }
 
-/* Update pada table-wrapper agar aman di layar kecil / zoom besar */
-.table-wrapper {
-    width: 100%;
-    overflow-x: auto; /* 🔥 Biar kalau di-zoom, tabelnya bisa di-scroll ke samping, gak hancur */
-    background: #111827;
-    border-radius: 18px;
-    border: 1px solid #1f2937;
-}
+    .main-heading {
+        color: #0f172a; 
+        font-size: 32px; 
+        font-weight: 800; 
+        margin: 0 0 8px 0;
+    }
 
-.table-krs {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 900px; /* 🔥 Mencegah tabel jadi "gepeng" saat kolom banyak */
-}
+    .sub-heading {
+        color: #64748b; 
+        margin: 0 0 30px 0;
+        font-size: 15px;
+        font-weight: 500;
+    }
 
-/* Hilangkan border-radius di table-krs karena sudah ada di wrapper-nya */
-.table-krs {
-    background: transparent; 
-}
+    /* ===== MAIN WRAPPER ===== */
+    .krs-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        min-height: 80vh; 
+        padding-bottom: 100px; 
+    }
 
-.table-krs th{
-    background:rgba(16,185,129,.12);
-    color:#34d399;
-    padding:14px;
-    font-size:13px;
-    text-align:left;
-}
+    /* ===== ALERT SYSTEM ===== */
+    .alert-custom {
+        background: #ecfdf5;
+        border: 1px solid rgba(16, 185, 129, 0.2);
+        color: #065f46;
+        padding: 14px 20px;
+        border-radius: 12px;
+        margin-bottom: 24px;
+        font-size: 14px;
+        font-weight: 500;
+    }
 
-.table-krs td{
-    padding:14px;
-    border-bottom:1px solid #1f2937;
-    color:white;
-}
+    /* ===== PACKET BUTTON ===== */
+    .btn-paket {
+        background: #10b981;
+        color: white;
+        border: none;
+        padding: 12px 22px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+    }
+    .btn-paket:hover {
+        background: #059669;
+        transform: translateY(-1px);
+    }
 
-.table-krs tr:hover{
-    background:rgba(16,185,129,.04);
-}
+    /* ===== TABLE CLEAN STYLE ===== */
+    .table-wrapper {
+        width: 100%;
+        overflow-x: auto; 
+        background: #ffffff;
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 12px rgba(148, 163, 184, 0.05);
+    }
 
-.badge{
-    padding:8px 14px;
-    border-radius:999px;
-    font-size:13px;
-    font-weight:600;
-}
+    .table-krs {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 900px; 
+        text-align: left;
+    }
 
-.badge-menunggu{
-    background:rgba(251,146,60,.15);
-    color:#fb923c;
-}
+    .table-krs th {
+        background: #f8fafc;
+        color: #475569;
+        padding: 16px 14px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        border-bottom: 1px solid #e2e8f0;
+    }
 
-.badge-disetujui{
-    background:rgba(16,185,129,.15);
-    color:#34d399;
-}
+    .table-krs td {
+        padding: 16px 14px;
+        border-bottom: 1px solid #f1f5f9;
+        color: #334155;
+        font-size: 14px;
+    }
 
-.badge-ditolak{
-    background:rgba(239,68,68,.15);
-    color:#f87171;
-}
+    .table-krs tr:last-child td {
+        border-bottom: none;
+    }
 
-.btn-hapus{
-    padding:8px 14px;
-    border-radius:10px;
-    background:rgba(239,68,68,.12);
-    color:#fca5a5;
-    border:1px solid rgba(239,68,68,.25);
-    cursor:pointer;
-    font-weight:600;
-}
+    .table-krs tr:hover {
+        background: #f8fafc;
+    }
 
-.btn-hapus:hover{
-    background:rgba(239,68,68,.2);
-}
+    /* ===== SOFT STATUS BADGES ===== */
+    .badge {
+        padding: 6px 14px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 700;
+        display: inline-block;
+    }
 
-/* Pastikan summary tidak menempel */
-.summary {
-    /* Ini tetap 'auto' supaya dia selalu cari posisi paling bawah yang tersedia */
-    margin-top: auto; 
-    
-    background: rgba(16, 185, 129, .08);
-    border: 1px solid rgba(16, 185, 129, .15);
-    border-radius: 16px;
-    padding: 25px;
-    color: white;
-    width: 100%;
-}
+    .badge-menunggu {
+        background: #fff7ed;
+        color: #c2410c;
+        border: 1px solid rgba(251, 146, 60, 0.2);
+    }
 
-.summary-flex {
-    display: flex;
-    /* 🔥 Balikkan ke space-between agar satu di kiri, satu di kanan */
-    justify-content: space-between; 
-    align-items: center;
-    gap: 20px;
-    flex-wrap: wrap; /* 🔥 Tetap pakai wrap biar pas di-zoom gak hancur */
-}
+    .badge-disetujui {
+        background: #ecfdf5;
+        color: #047857;
+        border: 1px solid rgba(16, 185, 129, 0.2);
+    }
 
-.progress-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    width: 300px; /* Kamu bisa atur lebar bar-nya di sini */
-    min-width: 200px;
-    /* 🔥 Tambahkan margin-left auto sebagai pengaman tambahan */
-    margin-left: auto; 
-}
+    .badge-ditolak {
+        background: #fef2f2;
+        color: #b91c1c;
+        border: 1px solid rgba(239, 68, 68, 0.2);
+    }
 
-/* Teks info SKS */
-.summary h3, .summary p {
-    margin: 0;
-    /* Hapus white-space: nowrap; agar lebih aman saat layar sangat sempit */
-}
+    /* ===== ACTION BUTTON ===== */
+    .btn-hapus {
+        padding: 6px 14px;
+        border-radius: 8px;
+        background: #fff5f5;
+        color: #e53e3e;
+        border: 1px solid rgba(229, 62, 62, 0.15);
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 12px;
+        transition: all 0.2s;
+    }
 
-.progress-bar{
-    flex:1;
-    height:14px;
-    background:rgba(16,185,129,.18);
-    border-radius:999px;
-    overflow:hidden;
-}
+    .btn-hapus:hover {
+        background: #fed7d7;
+        color: #c53030;
+    }
 
-.progress-fill{
-    height:100%;
-    background:linear-gradient(90deg,#10b981,#059669);
-    border-radius:999px;
-}
+    /* ===== SUMMARY FOOTER CARD ===== */
+    .summary {
+        margin-top: auto; 
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 4px 12px rgba(148, 163, 184, 0.05);
+    }
 
-.modal-delete{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.65);
-    display:none;
-    align-items:center;
-    justify-content:center;
-    z-index:9999;
-}
+    .summary-flex {
+        display: flex;
+        justify-content: space-between; 
+        align-items: center;
+        gap: 20px;
+        flex-wrap: wrap; 
+    }
 
-.modal-box{
-    width:420px;
-    background:#0f172a;
-    border:1px solid #1e293b;
-    border-radius:18px;
-    padding:28px;
-    color:white;
-    text-align:center;
-}
+    .summary h3 {
+        color: #0f172a;
+        font-size: 16px;
+        font-weight: 700;
+    }
 
-.modal-box h3{
-    margin-bottom:12px;
-    color:#f87171;
-}
+    .progress-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        width: 320px; 
+        min-width: 220px;
+        margin-left: auto; 
+    }
 
-.modal-box p{
-    color:#94a3b8;
-    margin-bottom:25px;
-}
+    .progress-bar {
+        flex: 1;
+        height: 10px;
+        background: #f1f5f9;
+        border-radius: 999px;
+        overflow: hidden;
+        border: 1px solid #e2e8f0;
+    }
 
-.modal-action{
-    display:flex;
-    justify-content:center;
-    gap:15px;
-}
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #10b981, #059669);
+        border-radius: 999px;
+    }
 
-.btn-batal{
-    background:#334155;
-    color:white;
-    border:none;
-    padding:10px 18px;
-    border-radius:10px;
-    cursor:pointer;
-}
+    /* ===== MODAL STYLING (LIGHT MINIMALIST) ===== */
+    .modal-delete {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.4); /* Backdrop redup halus */
+        backdrop-filter: blur(4px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+    }
 
-.btn-ya{
-    background:#ef4444;
-    color:white;
-    border:none;
-    padding:10px 18px;
-    border-radius:10px;
-    cursor:pointer;
-}
+    .modal-box {
+        width: 400px;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 30px;
+        text-align: center;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
 
-.btn-batal:hover{
-    background:#475569;
-}
+    .modal-box h3 {
+        margin: 0 0 10px 0;
+        color: #1e293b;
+        font-size: 18px;
+        font-weight: 700;
+    }
 
-.btn-ya:hover{
-    background:#dc2626;
-}
+    .modal-box p {
+        color: #64748b;
+        font-size: 14px;
+        margin: 0 0 24px 0;
+        line-height: 1.5;
+    }
+
+    .modal-action {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+    }
+
+    .btn-batal {
+        background: #f1f5f9;
+        color: #475569;
+        border: 1px solid #e2e8f0;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.15s;
+    }
+
+    .btn-ya {
+        background: #ef4444;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.15s;
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15);
+    }
+
+    .btn-batal:hover {
+        background: #e2e8f0;
+        color: #334155;
+    }
+
+    .btn-ya:hover {
+        background: #dc2626;
+        box-shadow: 0 6px 16px rgba(239, 68, 68, 0.25);
+    }
 </style>
 
-<h1 style="color:white; font-size:38px;">
-    Kartu Rencana Studi <span style="color:#34d399;">(KRS)</span>
-</h1>
-
-
+<div class="section-title">Ringkasan Rencana</div>
+<h1 class="main-heading">Kartu Rencana Studi <span style="color: #10b981;">(KRS)</span></h1>
+<p class="sub-heading">Lihat, pantau status persetujuan, dan kelola mata kuliah Anda di sini.</p>
 
 @if(session('success'))
-<div style="
-    background:rgba(16,185,129,.12);
-    border:1px solid rgba(16,185,129,.3);
-    color:#34d399;
-    padding:15px;
-    border-radius:10px;
-    margin-bottom:20px;
-">
-    {{ session('success') }}
-</div>
+    <div class="alert-custom">
+        ✅ {{ session('success') }}
+    </div>
 @endif
 
-<p style="color:#94a3b8; margin-bottom:30px;">
-    Lihat dan kelola KRS Anda di sini
-</p>
-
 @if(auth()->user()->semester == 2)
-
-<form action="{{ route('mhs.krs.ambilPaket') }}" method="POST"
-      style="margin-bottom:20px;">
-    @csrf
-
-    <button type="submit"
-        style="
-            background:#10b981;
-            color:white;
-            border:none;
-            padding:12px 20px;
-            border-radius:10px;
-            font-weight:600;
-            cursor:pointer;
-        "
-        onclick="return confirm('Ambil seluruh paket semester?')">
-
-        📦 Ambil Paket Semester 2
-    </button>
-</form>
-
+    <form action="{{ route('mhs.krs.ambilPaket') }}" method="POST" style="margin-bottom: 24px;">
+        @csrf
+        <button type="submit" class="btn-paket" onclick="return confirm('Ambil seluruh paket semester?')">
+            📦 Ambil Paket Semester 2
+        </button>
+    </form>
 @endif
 
 <div class="krs-wrapper">
-
     <div class="table-wrapper">
         <table class="table-krs">
             <thead>
                 <tr>
-                    <th>NO</th>
+                    <th style="width: 50px; text-align: center;">NO</th>
                     <th>KODE</th>
                     <th>MATA KULIAH</th>
                     <th>SKS</th>
                     <th>KELAS</th>
                     <th>HARI</th>
-                    <th>JAM</th>
+                    <th>JAM JADWAL</th>
                     <th>STATUS</th>
-                    <th>AKSI</th>
+                    <th style="text-align: center; width: 100px;">AKSI</th>
                 </tr>
             </thead>
-
             <tbody>
                 @foreach($krs as $i => $row)
-
-@php
-    $bentrok = false;
-
-    foreach ($krs as $j => $cek) {
-        if ($i != $j) {
-            if (
-                $row->hari == $cek->hari &&
-                $row->jam_mulai < $cek->jam_selesai &&
-                $row->jam_selesai > $cek->jam_mulai
-            ) {
-                $bentrok = true;
-                break;
-            }
-        }
-    }
-@endphp
-                <tr>
-                    <td>{{ $i+1 }}</td>
-                    <td>{{ $row->kode_matkul }}</td>
-                    <td>{{ $row->nama_matkul }}</td>
-                    <td><b>{{ $row->sks }}</b></td>
-                    <td>{{ $row->kelas }}</td>
-                    <td>{{ $row->hari }}</td>
-                    <td>{{ $row->jam_mulai }} - {{ $row->jam_selesai }}</td>
-
-                    <td>
-@if($bentrok)
-    <span class="badge badge-ditolak">
-        ⚠️ Jadwal Bertabrakan
-    </span>
-@else
-    <span class="badge badge-{{ $row->status }}">
-        @if($row->status == 'menunggu')
-            ⏳ Menunggu
-        @elseif($row->status == 'disetujui')
-            ✓ Disetujui
-        @else
-            ✗ Ditolak
-        @endif
-    </span>
-@endif
-                    </td>
-
-                    <td>
-<form action="{{ route('mhs.krs.delete', $row->id) }}"
-      method="POST"
-      style="display:inline;"
-      class="form-hapus">
-                            @csrf
-                            @method('DELETE')
-
-                            <button type="submit" class="btn-hapus">
-                                ✕ Hapus
-                            </button>
-                        </form>
-                    </td>
-                </tr>
+                    @php
+                        $bentrok = false;
+                        foreach ($krs as $j => $cek) {
+                            if ($i != $j) {
+                                if (
+                                    $row->hari == $cek->hari &&
+                                    $row->jam_mulai < $cek->jam_selesai &&
+                                    $row->jam_selesai > $cek->jam_mulai
+                                ) {
+                                    $bentrok = true;
+                                    break;
+                                }
+                            }
+                        }
+                    @endphp
+                    <tr>
+                        <td style="text-align: center; color: #94a3b8; font-weight: 500;">{{ $i+1 }}</td>
+                        <td style="font-weight: 600; color: #475569;">{{ $row->kode_matkul }}</td>
+                        <td style="font-weight: 600; color: #0f172a;">{{ $row->nama_matkul }}</td>
+                        <td><b style="color: #0f172a;">{{ $row->sks }}</b></td>
+                        <td style="font-weight: 500;">{{ $row->kelas }}</td>
+                        <td style="font-weight: 500;">{{ $row->hari }}</td>
+                        <td style="color: #475569; font-size: 13px;">{{ $row->jam_mulai }} - {{ $row->jam_selesai }}</td>
+                        <td>
+                            @if($bentrok)
+                                <span class="badge badge-ditolak">
+                                    ⚠️ Jadwal Bertabrakan
+                                </span>
+                            @else
+                                <span class="badge badge-{{ $row->status }}">
+                                    @if($row->status == 'menunggu')
+                                        ⏳ Menunggu
+                                    @elseif($row->status == 'disetujui')
+                                        ✓ Disetujui
+                                    @else
+                                        ✗ Ditolak
+                                    @endif
+                                </span>
+                            @endif
+                        </td>
+                        <td style="text-align: center;">
+                            <form action="{{ route('mhs.krs.delete', $row->id) }}"
+                                  method="POST"
+                                  style="display: inline;"
+                                  class="form-hapus">
+                                @csrf
+                                @map('DELETE')
+                                <button type="submit" class="btn-hapus">
+                                    ✕ Hapus
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
                 @endforeach
             </tbody>
         </table>
     </div>
 
-
-
     <div class="summary">
         <div class="summary-flex">
             <div>
-                <h3 style="margin:0 0 10px 0;">📊 Total SKS</h3>
-<p style="margin:0;color:#94a3b8;">
-    Total SKS Anda:
-    <b style="color:white">{{ $totalSks }}</b> dari {{ $maxSks }} SKS
-</p>
-                <p style="margin-top:8px;color:#94a3b8;">
-                    Sisa kuota:
-                   <b style="color:white">{{ $maxSks - $totalSks }} SKS</b>
+                <h3 style="margin: 0 0 8px 0;">📊 Total Beban SKS</h3>
+                <p style="margin: 0; color: #64748b; font-size: 14px; font-weight: 500;">
+                    Total SKS diambil: <b style="color: #0f172a; font-weight: 700;">{{ $totalSks }}</b> dari {{ $maxSks }} SKS
+                </p>
+                <p style="margin: 6px 0 0 0; color: #64748b; font-size: 13px;">
+                    Sisa kuota beban semester: <b style="color: #059669; font-weight: 600;">{{ $maxSks - $totalSks }} SKS</b>
                 </p>
             </div>
 
@@ -357,68 +392,52 @@
                          style="width: {{ min(($totalSks / $maxSks) * 100, 100) }}%">
                     </div>
                 </div>
-                <span style="color:#94a3b8;">
+                <span style="color: #475569; font-weight: 700; font-size: 14px;">
                     {{ round(($totalSks / $maxSks) * 100, 1) }}%
                 </span>
             </div>
         </div>
     </div>
-
 </div>
 
 <div class="modal-delete" id="modalDelete">
-
     <div class="modal-box">
-
-        <h3>🗑️ Hapus KRS</h3>
-
-        <p>
-            Apakah Anda yakin ingin menghapus mata kuliah ini?
-        </p>
-
+        <h3>Hapus Mata Kuliah?</h3>
+        <p>Tindakan ini akan membatalkan pengambilan mata kuliah terpilih dari rencana studi semester Anda.</p>
         <div class="modal-action">
-
-            <button class="btn-batal" id="btnBatal">
-                Batal
-            </button>
-
-            <button class="btn-ya" id="btnYa">
-                Ya, Hapus
-            </button>
-
+            <button class="btn-batal" id="btnBatal">Kembali</button>
+            <button class="btn-ya" id="btnYa">Ya, Hapus</button>
         </div>
-
     </div>
-
 </div>
 
 <script>
-    let formDelete = null;
+let formDelete = null;
 
-document.querySelectorAll(".form-hapus").forEach(form=>{
-
-    form.addEventListener("submit",function(e){
-
+document.querySelectorAll(".form-hapus").forEach(form => {
+    form.addEventListener("submit", function(e) {
         e.preventDefault();
-
-        formDelete=this;
-
-        document.getElementById("modalDelete").style.display="flex";
-
+        formDelete = this;
+        document.getElementById("modalDelete").style.display = "flex";
     });
-
 });
 
-document.getElementById("btnBatal").onclick=function(){
-
-    document.getElementById("modalDelete").style.display="none";
-
+document.getElementById("btnBatal").onclick = function() {
+    document.getElementById("modalDelete").style.display = "none";
 };
 
-document.getElementById("btnYa").onclick=function(){
-
-    formDelete.submit();
-
+document.getElementById("btnYa").onclick = function() {
+    if(formDelete) {
+        formDelete.submit();
+    }
 };
+
+// Tutup modal jika user klik di area luar modal box
+window.onclick = function(event) {
+    const modal = document.getElementById("modalDelete");
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
 </script>
 @endsection

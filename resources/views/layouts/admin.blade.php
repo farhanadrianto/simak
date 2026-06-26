@@ -3,245 +3,256 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - SIMAK</title>
+    <title>Admin Panel | SIMAK FIK 2026</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
-        /* GLOBAL FIX */
-        * {
-            box-sizing: border-box;
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
         }
 
-        html {
-            background: #0b1220; 
-            overflow-y: auto;
+        body{
+            display:flex;
+            font-family:'Inter',system-ui,-apple-system,sans-serif;
+            background:#f8fafc;
+            color:#0f172a;
         }
 
-        body {
-            margin: 0;
-            display: flex;
-            font-family: 'Inter', sans-serif;
-            background: #0b1220;
-            color: white;
-            min-height: 100vh;
-            /* FIX: Ubah fit-content menjadi 100% */
-            width: 100%;
-            overflow-x: hidden;
+        /* ================= SIDEBAR ================= */
+
+        .sidebar{
+            width:260px;
+            height:100vh;
+            background:#1c253c;
+            position:fixed;
+            left:0;
+            top:0;
+
+            display:flex;
+            flex-direction:column;
+
+            padding:24px 20px;
+            z-index:999;
         }
 
-        /* ===== SIDEBAR ===== */
-        .sidebar {
-            width: 240px;
-            min-width: 240px;
-            background: #020617;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-            position: sticky;
-            top: 0;
-            left: 0;
-            z-index: 99;
-            border-right: 1px solid #1e293b;
+        .logo{
+            margin-bottom:35px;
+            padding-left:8px;
         }
 
-        .logo {
-            margin-bottom: 30px;
+        .logo-title{
+            font-size:20px;
+            font-weight:800;
+            color:#fff;
+            letter-spacing:.5px;
         }
 
-        .logo-title {
-            font-size: 22px;
-            font-weight: 800;
-            letter-spacing: 1px;
-            color: #4f46e5; 
+        .logo-sub{
+            font-size:10px;
+            color:#94a3b8;
+            margin-top:4px;
+            letter-spacing:1.5px;
+            text-transform:uppercase;
         }
 
-        .logo-sub {
-            font-size: 11px;
-            color: #64748b;
-            margin-top: 4px;
-            letter-spacing: 1px;
+        .menu{
+            flex:1;
+            display:flex;
+            flex-direction:column;
+            gap:6px;
+            overflow-y:auto;
         }
 
-        .menu {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+        .menu a{
+            display:flex;
+            align-items:center;
+            gap:12px;
+
+            padding:12px 16px;
+
+            border-radius:12px;
+
+            text-decoration:none;
+            color:#94a3b8;
+
+            transition:.2s;
+
+            font-size:14px;
+            font-weight:500;
         }
 
-        .menu a {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
-            border-radius: 10px;
-            text-decoration: none;
-            color: #9ca3af;
-            transition: 0.2s;
-            font-size: 14px;
+        .menu a:hover{
+            background:#2d3748;
+            color:white;
         }
 
-        .menu a:hover {
-            background: #1e293b;
-            color: white;
+        .menu a.active{
+            background:#2563eb;
+            color:white;
+            font-weight:600;
         }
 
-        .menu a.active {
-            background: rgba(79, 70, 229, 0.15);
-            color: #818cf8;
-            border: 1px solid rgba(79, 70, 229, 0.3);
-            font-weight: 600;
-            pointer-events: none;
-            cursor: default;
+        /* ================= LOGOUT ================= */
+
+        .bottom{
+            margin-top:20px;
+            padding-top:20px;
+            border-top:1px solid #334155;
         }
 
-        /* ===== MAIN AREA ===== */
-        .main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            min-width: 0; 
-            /* FIX: Pastikan mengisi sisa ruang */
-            width: 100%;
+        .logout{
+            width:100%;
+            padding:12px;
+
+            border-radius:10px;
+
+            background:#fef2f2;
+            color:#991b1b;
+
+            border:1px solid rgba(239,68,68,.2);
+
+            cursor:pointer;
+
+            font-size:14px;
+            font-weight:700;
+
+            transition:.2s;
         }
 
-        /* ===== HEADER STRIP ===== */
-        .header-strip {
-            background: #020617;
-            padding: 20px 30px;
-            flex-shrink: 0;
-            border-bottom: 1px solid #1e293b;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            /* FIX: Pastikan header selebar area main */
-            width: 100%;
+        .logout:hover{
+            background:#e11d48;
+            color:white;
+            border-color:#e11d48;
+            box-shadow:0 4px 12px rgba(225,29,72,.15);
         }
 
-        .badge-admin {
-            display: inline-block;
-            background: rgba(79, 70, 229, 0.15);
-            color: #818cf8;
-            padding: 8px 18px;
-            border-radius: 999px;
-            font-weight: 600;
-            font-size: 13px;
-            border: 1px solid rgba(79, 70, 229, 0.3);
-            white-space: nowrap;
+        /* ================= MAIN ================= */
+
+        .main{
+            margin-left:260px;
+            width:calc(100% - 260px);
+
+            display:flex;
+            flex-direction:column;
+
+            min-height:100vh;
         }
 
-        /* ===== CONTENT AREA ===== */
-        .content {
-            flex: 1;
-            padding: 30px;
-            width: 100%;
+        .header-strip{
+            background:white;
+
+            height:70px;
+
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+
+            padding:0 40px;
+
+            border-bottom:1px solid #e2e8f0;
+
+            position:sticky;
+            top:0;
+            z-index:100;
         }
 
-        /* ===== LOGOUT BUTTON ===== */
-        .bottom {
-            margin-top: auto;
-            padding-bottom: 20px;
+        .badge-admin{
+            background:#eff6ff;
+            color:#2563eb;
+
+            padding:6px 16px;
+
+            border-radius:999px;
+
+            font-size:11px;
+            font-weight:700;
+
+            border:1px solid rgba(37,99,235,.1);
         }
 
-        .logout {
-            width: 100%;
-            padding: 12px;
-            border-radius: 10px;
-            text-align: center;
-            background: #3f1d1d;
-            color: #fca5a5;
-            border: 1px solid #7f1d1d;
-            cursor: pointer;
-            transition: 0.3s;
-            font-weight: 600;
+        .content{
+            flex:1;
+            padding:40px;
+            overflow-x:auto;
         }
 
-        .logout:hover {
-            background: #7f1d1d;
-            color: white;
-        }
-
-        .card-admin {
-            background: #111827;
-            border-radius: 12px;
-            padding: 20px;
-            border: 1px solid #1f2937;
-        }
     </style>
-</head>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
 
 <body>
 
-    <!-- SIDEBAR -->
-    <div class="sidebar">
-        <div class="logo">
-            <div class="logo-title">SIMAK</div>
-            <div class="logo-sub">ADMIN PANEL</div>
-        </div>
+<div class="sidebar">
 
-        <div class="menu">
-            <!-- Dashboard -->
-            @if(request()->is('admin/dashboard'))
-                <a class="active">🏠 Dashboard</a>
-            @else
-                <a href="/admin/dashboard">🏠 Dashboard</a>
-            @endif
-
-            <!-- Mata Kuliah -->
-            @if(request()->is('admin/matkul*'))
-                <a class="active">📚 Kelola Mata Kuliah</a>
-            @else
-                <a href="/admin/matkul">📚 Kelola Mata Kuliah</a>
-            @endif
-
-            <!-- Pengumuman -->
-            @if(request()->is('admin/pengumuman*'))
-                <a class="active">📢 Pengumuman</a>
-            @else
-                <a href="/admin/pengumuman">📢 Pengumuman</a>
-            @endif
-
-            {{-- Paket Semester --}}
-            @if(request()->is('admin/paket-semester*'))
-                <a class="active">📦 Paket Semester 2</a>
-            @else
-                <a href="{{ route('admin.paket') }}">📦 Paket Semester 2</a>
-            @endif
-
-            @if(request()->is('admin/report*'))
-                <a class="active">📊 Report</a>
-            @else
-                <a href="{{ route('admin.report') }}">📊 Report</a>
-            @endif
-        </div>
-
-        <div class="bottom">
-            @if(request()->is('admin/dashboard'))
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="logout">🚪 Keluar</button>
-                </form>
-            @endif
-        </div>
+    <div class="logo">
+        <div class="logo-title">SIMAK FIK</div>
+        <div class="logo-sub">Administrator</div>
     </div>
 
-    <!-- MAIN AREA -->
-    <div class="main">
-        <!-- HEADER -->
-        <div class="header-strip">
-            <div class="badge-admin">SIMAK FIK 2026</div>
-            <!-- Mengubah sintaks date PHP menjadi format Carbon Indonesia -->
-            <div style="font-size: 13px; color: #94a3b8;">
-                {{ \Carbon\Carbon::now()->locale('id')->isoFormat('dddd, DD MMMM YYYY') }}
-            </div>
+    <div class="menu">
+
+        <a href="/admin/dashboard"
+        class="{{ request()->is('admin/dashboard') ? 'active' : '' }}">
+            🏠 Dashboard
+        </a>
+
+        <a href="/admin/matkul"
+        class="{{ request()->is('admin/matkul*') ? 'active' : '' }}">
+            📚 Mata Kuliah
+        </a>
+
+        <a href="/admin/pengumuman"
+        class="{{ request()->is('admin/pengumuman*') ? 'active' : '' }}">
+            📢 Pengumuman
+        </a>
+
+        <a href="{{ route('admin.paket') }}"
+        class="{{ request()->is('admin/paket-semester*') ? 'active' : '' }}">
+            📦 Paket Semester 2
+        </a>
+
+        <a href="{{ route('admin.report') }}"
+        class="{{ request()->is('admin/report*') ? 'active' : '' }}">
+            📊 Laporan
+        </a>
+
+    </div>
+
+<div class="bottom">
+    @if(request()->is('admin/dashboard'))
+        <form action="{{ route('logout') }}" method="POST">
+            @csrf
+            <button type="submit" class="logout">🚪 Keluar</button>
+        </form>
+    @endif
+</div>
+
+</div>
+
+<div class="main">
+
+    <div class="header-strip">
+
+        <div class="badge-admin">
+            PORTAL ADMIN FIK
         </div>
 
-        <!-- CONTENT -->
-        <div class="content">
-            @yield('content')
+        <div style="font-size:13px;color:#64748b;font-weight:500;">
+            {{ \Carbon\Carbon::now()->locale('id')->isoFormat('dddd, DD MMMM YYYY') }}
         </div>
+
     </div>
+
+    <div class="content">
+        @yield('content')
+    </div>
+
+</div>
 
 </body>
 </html>
